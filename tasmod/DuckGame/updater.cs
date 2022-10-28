@@ -279,11 +279,11 @@ namespace DuckGame
             }
             if (currentDuck != null && recording)
                 frames.Add(new inputFrame(currentDuck.inputProfile));
-            if (Keyboard.Pressed(Keys.F5))
-            {
-                debug = !debug;
-                DevConsole.Log(debug ? "Enabled" : "Disabled Debug", debug ? Color.Green : Color.Red);
-            }
+            //if (Keyboard.Pressed(Keys.F5)) // I Never liked it
+            //{
+            //    debug = !debug; 
+            //    DevConsole.Log(debug ? "Enabled" : "Disabled Debug", debug ? Color.Green : Color.Red);
+            //}
             if (Keyboard.Pressed(Keys.F9))
             {
                 lastsavedstate = null;
@@ -326,35 +326,36 @@ namespace DuckGame
             if (!(Level.current is ChallengeLevel) || !waitingforDuck)
                 return;
             Duck duck = null;
-            using (IEnumerator<Thing> enumerator = Level.current.things[typeof(Duck)].GetEnumerator())
+            foreach (Duck duck2 in Level.current.things[typeof(Duck)])
             {
-                if (enumerator.MoveNext())
-                    duck = (Duck)enumerator.Current;
-            }
-            if (duck == null || (float)_waitSpawnField.GetValue(Level.current as ChallengeLevel) - 0.0599999986588955 > 0.0)
-                return;
-            if ((int)waitAfterSpawnDingsField.GetValue(Level.current as ChallengeLevel) != 2)
-                return;
-            try
-            {
-                waitingforDuck = false;
-                currentDuck = duck;
-                bool flag = false;
-                using (IEnumerator<Thing> enumerator = Level.current.things[typeof(showframe)].GetEnumerator())
+                if (!(duck2 is TargetDuck))
                 {
-                    if (enumerator.MoveNext())
-                    {
-                        Thing current = enumerator.Current;
-                        flag = true;
-                    }
+                    duck = duck2;
                 }
-                if (!flag)
-                    Level.Add(new showframe());
-                startTAS();
             }
-            catch
+            if (duck != null && (float)updater._waitSpawnField.GetValue(Level.current as ChallengeLevel) - 0.06f <= 0f && (int)updater.waitAfterSpawnDingsField.GetValue(Level.current as ChallengeLevel) == 2)
             {
-                Mod.Debug.Log("error 404: duck not found");
+                try
+                {
+                    waitingforDuck = false;
+                    currentDuck = duck;
+                    bool flag = false;
+                    using (IEnumerator<Thing> enumerator = Level.current.things[typeof(showframe)].GetEnumerator())
+                    {
+                        if (enumerator.MoveNext())
+                        {
+                            Thing current = enumerator.Current;
+                            flag = true;
+                        }
+                    }
+                    if (!flag)
+                        Level.Add(new showframe());
+                    startTAS();
+                }
+                catch
+                {
+                    Mod.Debug.Log("error 404: duck not found");
+                }
             }
         }
 

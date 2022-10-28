@@ -59,7 +59,6 @@ namespace DuckGame
             Patch();
             _ = new updater();
         }
-
         public static void Patch()
         {
             bool flag = false;
@@ -92,6 +91,7 @@ namespace DuckGame
                 {
                 }
                 MethodInfo method = key1.GetType("HarmonyLoader.Loader").GetMethod("Patch2", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                mpatchList.Add(new MPatch(SGMI(typeof(TargetDuck), "Kill"), SGMI(typeof(TargetDuckPatch), "PrefixKill")));
                 mpatchList.Add(new MPatch(SGMI(typeof(Ragdoll), "UpdateInput"), SGMI(typeof(RagdollPatch), "PrefixUpdateInput")));
                 mpatchList.Add(new MPatch(SGMI(typeof(Chainsaw), "Shing"), SGMI(typeof(ChainsawPatch), "PrefixShing")));
                 mpatchList.Add(new MPatch(SGMI(typeof(InputProfile), "Down"), SGMI(typeof(PatchInputProfile), "PrefixDown")));

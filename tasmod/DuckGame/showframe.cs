@@ -25,8 +25,7 @@ namespace DuckGame
         public static List<List<object>> CancerFrame;
         public HashSet<List<object>> linestodraw;
 
-        public showframe()
-          : base()
+        public showframe() : base()
         {
             dootherthing = true;
             layer = Layer.Foreground;
@@ -314,10 +313,12 @@ namespace DuckGame
             currentDucklocal = updater.currentDuck;
             if (currentDucklocal == null)
             {
-                using (IEnumerator<Thing> enumerator = Level.current.things[typeof(Duck)].GetEnumerator())
+                foreach(Duck duck in Level.current.things[typeof(Duck)])
                 {
-                    if (enumerator.MoveNext())
-                        currentDucklocal = enumerator.Current as Duck;
+                    if (!(duck is TargetDuck))
+                    {
+                        currentDucklocal = duck;
+                    }
                 }
             }
             if (!updater.debug && !updater.frameshow || currentDucklocal == null)
