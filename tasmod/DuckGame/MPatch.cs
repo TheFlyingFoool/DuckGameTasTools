@@ -21,10 +21,10 @@ namespace DuckGame
           MethodInfo _postfix = null,
           MethodInfo _transpiler = null)
         {
-            this.original = _original;
-            this.prefix = _prefix;
-            this.postfix = _postfix;
-            this.transpiler = _transpiler;
+            original = _original;
+            prefix = _prefix;
+            postfix = _postfix;
+            transpiler = _transpiler;
         }
     }
 }

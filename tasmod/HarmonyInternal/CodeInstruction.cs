@@ -24,9 +24,9 @@ namespace HarmonyInternal
 
         public CodeInstruction(CodeInstruction instruction)
         {
-            this.opcode = instruction.opcode;
-            this.operand = instruction.operand;
-            this.labels = ((IEnumerable<Label>)instruction.labels.ToArray()).ToList();
+            opcode = instruction.opcode;
+            operand = instruction.operand;
+            labels = ((IEnumerable<Label>)instruction.labels.ToArray()).ToList();
         }
 
         public CodeInstruction Clone() => new CodeInstruction(this)

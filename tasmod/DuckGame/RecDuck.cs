@@ -21,91 +21,91 @@ namespace DuckGame
         public RecDuck(float xval, float yval)
           : base(xval, yval, null)
         {
-            this._didImpactSound = true;
+            _didImpactSound = true;
         }
 
         public override void UpdatePhysics()
         {
             if (physicsfcksit)
                 return;
-            if (this.framesSinceGrounded > 10)
-                this.framesSinceGrounded = 10;
-            this._lastPosition = this.position;
-            this._lastVelocity = this.velocity;
-            if (!this.solid || !this.enablePhysics || this.level != null && !this.level.simulatePhysics)
+            if (framesSinceGrounded > 10)
+                framesSinceGrounded = 10;
+            _lastPosition = position;
+            _lastVelocity = velocity;
+            if (!solid || !enablePhysics || level != null && !level.simulatePhysics)
             {
-                this.lastGrounded = DateTime.Now;
-                if (this.solid)
+                lastGrounded = DateTime.Now;
+                if (solid)
                     return;
-                this.solidImpacting.Clear();
-                this.impacting.Clear();
+                solidImpacting.Clear();
+                impacting.Clear();
             }
             else
             {
                 if (!(HelperG.GfieldVal("PhysicsObject", "_collisionPred", this) is Predicate<MaterialThing> match))
                 {
-                    match = thing => thing == null || !Collision.Rect(this.topLeft, this.bottomRight, thing) || thing is Duck;
+                    match = thing => thing == null || !Collision.Rect(topLeft, bottomRight, thing) || thing is Duck;
                     HelperG.SfieldVal("PhysicsObject", "_collisionPred", match, this);
                 }
-                this._curPuddle = null;
-                if (!this.skipClip)
+                _curPuddle = null;
+                if (!skipClip)
                 {
-                    this.clip.RemoveWhere(match);
-                    this.impacting.RemoveWhere(match);
+                    clip.RemoveWhere(match);
+                    impacting.RemoveWhere(match);
                 }
-                if (this._sleeping)
+                if (_sleeping)
                 {
                     bool flag = (bool)HelperG.GfieldVal("PhysicsObject", "_awaken", this);
                     if (hSpeed == 0.0 && this.vSpeed == 0.0 && heat <= 0.0 && !flag)
                         return;
-                    this._sleeping = false;
+                    _sleeping = false;
                     HelperG.SfieldVal("PhysicsObject", "_awaken", false, this);
                 }
-                if (!this.skipClip)
-                    this.solidImpacting.RemoveWhere(match);
+                if (!skipClip)
+                    solidImpacting.RemoveWhere(match);
                 float currentFriction = this.currentFriction;
-                if (this.sliding || this.crouch)
+                if (sliding || crouch)
                     currentFriction *= 0.28f;
-                float num1 = currentFriction * this.specialFrictionMod;
-                if (this.owner is Duck)
-                    this.gravMultiplier = 1f;
+                float num1 = currentFriction * specialFrictionMod;
+                if (owner is Duck)
+                    gravMultiplier = 1f;
                 if (hSpeed > -(double)num1 && hSpeed < (double)num1)
-                    this.hSpeed = 0.0f;
-                if (this.duck)
+                    hSpeed = 0.0f;
+                if (duck)
                 {
                     if (hSpeed > 0.0)
-                        this.hSpeed -= num1;
+                        hSpeed -= num1;
                     if (hSpeed < 0.0)
-                        this.hSpeed += num1;
+                        hSpeed += num1;
                 }
-                else if (this.grounded)
+                else if (grounded)
                 {
                     if (hSpeed > 0.0)
-                        this.hSpeed -= num1;
+                        hSpeed -= num1;
                     if (hSpeed < 0.0)
-                        this.hSpeed += num1;
+                        hSpeed += num1;
                 }
                 else
                 {
-                    if (this.isServerForObject && y > Level.current.lowestPoint + 500.0)
+                    if (isServerForObject && y > Level.current.lowestPoint + 500.0)
                     {
-                        this.removedFromFall = true;
+                        removedFromFall = true;
                         if (this != null)
                             return;
                         Level.Remove(this);
                     }
                     if (hSpeed > 0.0)
-                        this.hSpeed -= num1 * 0.7f * this.airFrictionMult;
+                        hSpeed -= num1 * 0.7f * airFrictionMult;
                     if (hSpeed < 0.0)
-                        this.hSpeed += num1 * 0.7f * this.airFrictionMult;
+                        hSpeed += num1 * 0.7f * airFrictionMult;
                 }
-                if (hSpeed > (double)this.hMax)
-                    this.hSpeed = this.hMax;
-                if (hSpeed < -(double)this.hMax)
-                    this.hSpeed = -this.hMax;
-                Vec2 p1_1 = this.topLeft + new Vec2(0.0f, 0.5f);
-                Vec2 p2_1 = this.bottomRight + new Vec2(0.0f, -0.5f);
-                this.lastHSpeed = this.hSpeed;
+                if (hSpeed > (double)hMax)
+                    hSpeed = hMax;
+                if (hSpeed < -(double)hMax)
+                    hSpeed = -hMax;
+                Vec2 p1_1 = topLeft + new Vec2(0.0f, 0.5f);
+                Vec2 p2_1 = bottomRight + new Vec2(0.0f, -0.5f);
+                lastHSpeed = hSpeed;
                 float num2 = 0.0f;
                 bool flag1 = false;
                 if (hSpeed != 0.0)
@@ -125,12 +125,12 @@ namespace DuckGame
                     bool flag2 = (bool)HelperG.GfieldVal("PhysicsObject", "_awaken", this);
                     if (this.hSpeed == 0.0 && this.vSpeed == 0.0 && heat <= 0.0 && !flag2)
                         return;
-                    this._sleeping = false;
+                    _sleeping = false;
                     List<MaterialThing> materialThingList = new List<MaterialThing>();
                     HelperG.SfieldVal("PhysicsObject", "_hitThings", materialThingList, this);
                     Level.CheckRectAll(p1_1, p2_1, materialThingList);
                     HelperG.SfieldVal("PhysicsObject", "_hitThings", materialThingList, this);
-                    if (Network.isActive && !this.isServerForObject && Math.Abs(this.hSpeed) > 0.5 && doduckonduck)
+                    if (Network.isActive && !isServerForObject && Math.Abs(this.hSpeed) > 0.5 && doduckonduck)
                     {
                         List<Duck> outList = HelperG.GfieldVal("PhysicsObject", "_hitDucks", this) as List<Duck>;
                         outList.Clear();
@@ -156,8 +156,8 @@ namespace DuckGame
                         float num4 = this.hSpeed / num3;
                         if (num4 != 0.0 && Math.Sign(num4) == Math.Sign(hSpeed))
                         {
-                            this.x += num4;
-                            this._inPhysicsLoop = true;
+                            x += num4;
+                            _inPhysicsLoop = true;
                             bool flag3 = false;
                             for (int index2 = materialThingList.Count - 1; index2 >= 0; --index2)
                             {
@@ -169,11 +169,11 @@ namespace DuckGame
                             }
                             foreach (MaterialThing with in materialThingList)
                             {
-                                if ((doduckonduck || !(with is Duck) && !(with is RagdollPart)) && !(with is Goody) && with != this && !this.clip.Contains(with) && !with.clip.Contains(this) && with.solid && (this.planeOfExistence == 4 || with.planeOfExistence == planeOfExistence) && (!flag3 || with is Block))
+                                if ((doduckonduck || !(with is Duck) && !(with is RagdollPart)) && !(with is Goody) && with != this && !clip.Contains(with) && !with.clip.Contains(this) && with.solid && (planeOfExistence == 4 || with.planeOfExistence == planeOfExistence) && (!flag3 || with is Block))
                                 {
                                     Vec2 position = this.position;
                                     bool flag4 = false;
-                                    if (with.left <= (double)this.right && with.left > (double)this.left)
+                                    if (with.left <= (double)right && with.left > (double)left)
                                     {
                                         flag4 = true;
                                         if (this.hSpeed > 0.0)
@@ -185,10 +185,10 @@ namespace DuckGame
                                                 flag3 = true;
                                             }
                                             with.Impact(this, ImpactedFrom.Left, true);
-                                            this.Impact(with, ImpactedFrom.Right, true);
+                                            Impact(with, ImpactedFrom.Right, true);
                                         }
                                     }
-                                    if (with.right >= (double)this.left && with.right < (double)this.right)
+                                    if (with.right >= (double)left && with.right < (double)right)
                                     {
                                         flag4 = true;
                                         if (this.hSpeed < 0.0)
@@ -200,7 +200,7 @@ namespace DuckGame
                                                 flag3 = true;
                                             }
                                             with.Impact(this, ImpactedFrom.Right, true);
-                                            this.Impact(with, ImpactedFrom.Left, true);
+                                            Impact(with, ImpactedFrom.Left, true);
                                         }
                                     }
                                     if (with is IBigStupidWall && (position - this.position).length > 64.0)
@@ -208,37 +208,37 @@ namespace DuckGame
                                     if (flag4)
                                     {
                                         with.Touch(this);
-                                        this.Touch(with);
+                                        Touch(with);
                                     }
                                 }
                             }
-                            this._inPhysicsLoop = false;
+                            _inPhysicsLoop = false;
                         }
                         else
                             break;
                     }
                 }
                 if (flag1)
-                    this.x = num2;
-                if (this.vSpeed > (double)this.vMax)
-                    this.vSpeed = this.vMax;
-                if (this.vSpeed < -(double)this.vMax)
-                    this.vSpeed = -this.vMax;
-                this.vSpeed += this.currentGravity;
+                    x = num2;
+                if (this.vSpeed > (double)vMax)
+                    this.vSpeed = vMax;
+                if (this.vSpeed < -(double)vMax)
+                    this.vSpeed = -vMax;
+                this.vSpeed += currentGravity;
                 if (this.vSpeed < 0.0)
-                    this.grounded = false;
-                this.grounded = false;
-                ++this.framesSinceGrounded;
+                    grounded = false;
+                grounded = false;
+                ++framesSinceGrounded;
                 if (this.vSpeed <= 0.0)
                     Math.Floor(this.vSpeed);
                 else
                     Math.Ceiling(this.vSpeed);
-                Vec2 p1_2 = this.topLeft + new Vec2(0.5f, 0.0f);
-                Vec2 p2_2 = this.bottomRight + new Vec2(-0.5f, 0.0f);
+                Vec2 p1_2 = topLeft + new Vec2(0.5f, 0.0f);
+                Vec2 p2_2 = bottomRight + new Vec2(-0.5f, 0.0f);
                 float num5 = -9999f;
                 bool flag5 = false;
                 float vSpeed = this.vSpeed;
-                this.lastVSpeed = this.vSpeed;
+                lastVSpeed = this.vSpeed;
                 if (this.vSpeed < 0.0)
                 {
                     p1_2.y += this.vSpeed;
@@ -259,9 +259,9 @@ namespace DuckGame
                 HelperG.SfieldVal("PhysicsObject", "_hitThings", materialThingList1, this);
                 double top = this.top;
                 double bottom = this.bottom;
-                if (this != null && this.inputProfile.Down("DOWN"))
+                if (this != null && inputProfile.Down("DOWN"))
                 {
-                    int jumpValid = this._jumpValid;
+                    int jumpValid = _jumpValid;
                 }
                 int num6 = (int)Math.Ceiling(Math.Abs(this.vSpeed) / 4.0);
                 for (int index3 = 0; index3 < num6; ++index3)
@@ -269,8 +269,8 @@ namespace DuckGame
                     float num7 = this.vSpeed / num6;
                     if (num7 != 0.0 && Math.Sign(num7) == Math.Sign(vSpeed))
                     {
-                        this.y += num7;
-                        this._inPhysicsLoop = true;
+                        y += num7;
+                        _inPhysicsLoop = true;
                         for (int index4 = materialThingList1.Count - 1; index4 >= 0; --index4)
                         {
                             MaterialThing materialThing = materialThingList1[index4];
@@ -287,11 +287,11 @@ namespace DuckGame
                                 if (with is FluidPuddle)
                                 {
                                     flag5 = true;
-                                    this._curPuddle = with as FluidPuddle;
+                                    _curPuddle = with as FluidPuddle;
                                     if (with.top < this.bottom - 2.0 && with.collisionSize.y > 2.0)
                                         num5 = with.top;
                                 }
-                                if (!(with is Goody) && with != this && !this.clip.Contains(with) && !with.clip.Contains(this) && with.solid && (this.planeOfExistence == 4 || with.planeOfExistence == planeOfExistence))
+                                if (!(with is Goody) && with != this && !clip.Contains(with) && !with.clip.Contains(this) && with.solid && (planeOfExistence == 4 || with.planeOfExistence == planeOfExistence))
                                 {
                                     Vec2 position = this.position;
                                     bool flag6 = false;
@@ -303,7 +303,7 @@ namespace DuckGame
                                             double y = this.y;
                                             HelperG.SfieldVal("PhysicsObject", "_collideTop", with, this);
                                             with.Impact(this, ImpactedFrom.Bottom, true);
-                                            this.Impact(with, ImpactedFrom.Top, true);
+                                            Impact(with, ImpactedFrom.Top, true);
                                         }
                                     }
                                     if (with.top <= (double)this.bottom && with.bottom > (double)this.bottom)
@@ -313,7 +313,7 @@ namespace DuckGame
                                         {
                                             HelperG.SfieldVal("PhysicsObject", "_collideBottom", with, this);
                                             with.Impact(this, ImpactedFrom.Top, true);
-                                            this.Impact(with, ImpactedFrom.Bottom, true);
+                                            Impact(with, ImpactedFrom.Bottom, true);
                                         }
                                     }
                                     if (with is IBigStupidWall && (position - this.position).length > 64.0)
@@ -321,22 +321,22 @@ namespace DuckGame
                                     if (flag6)
                                     {
                                         with.Touch(this);
-                                        this.Touch(with);
+                                        Touch(with);
                                     }
                                 }
                             }
                         }
-                        this._inPhysicsLoop = false;
+                        _inPhysicsLoop = false;
                     }
                     else
                         break;
                 }
-                if (this.grounded)
+                if (grounded)
                 {
-                    this.lastGrounded = DateTime.Now;
-                    this.framesSinceGrounded = 0;
+                    lastGrounded = DateTime.Now;
+                    framesSinceGrounded = 0;
                     Thing thing = HelperG.GfieldVal("PhysicsObject", "_collideBottom", this) as Thing;
-                    if (!this.doFloat && hSpeed == 0.0 && this.vSpeed == 0.0)
+                    if (!doFloat && hSpeed == 0.0 && this.vSpeed == 0.0)
                     {
                         switch (thing)
                         {
@@ -344,7 +344,7 @@ namespace DuckGame
                             case IPlatform _:
                                 if (!(thing is ItemBox) || (thing as ItemBox).canBounce)
                                 {
-                                    this._sleeping = true;
+                                    _sleeping = true;
                                     break;
                                 }
                                 break;
@@ -353,76 +353,76 @@ namespace DuckGame
                 }
                 if (num5 > -999.0)
                 {
-                    if (!this.doFloat && this.vSpeed > 1.0)
+                    if (!doFloat && this.vSpeed > 1.0)
                     {
                         FluidData fluidData = (FluidData)HelperG.GfieldVal("PhysicsObject", "_curFluid", this);
                         SFX.Play("largeSplash", Rando.Float(0.6f, 0.7f), Rando.Float(-0.7f, -0.2f));
                     }
-                    this.doFloat = true;
+                    doFloat = true;
                 }
                 else
-                    this.doFloat = false;
-                if (this._curPuddle != null)
+                    doFloat = false;
+                if (_curPuddle != null)
                 {
                     HelperG.SfieldVal("PhysicsObject", "_curFluid", _curPuddle.data, this);
-                    if (this.onFire && _curPuddle.data.flammable <= 0.5 && _curPuddle.data.heat <= 0.5)
-                        this.Extinquish();
+                    if (onFire && _curPuddle.data.flammable <= 0.5 && _curPuddle.data.heat <= 0.5)
+                        Extinquish();
                     else if (_curPuddle.data.heat > 0.5)
                     {
-                        if (flammable > 0.0 && this.isServerForObject)
+                        if (flammable > 0.0 && isServerForObject)
                         {
                             bool onFire = this.onFire;
-                            this.Burn(this.position, this);
+                            Burn(position, this);
                             if (this != null && this.onFire && !onFire)
-                                this.ThrowItem();
+                                ThrowItem();
                         }
-                        this.DoHeatUp(0.015f, this.position);
+                        DoHeatUp(0.015f, position);
                     }
                     else
-                        this.DoHeatUp(-0.05f, this.position);
+                        DoHeatUp(-0.05f, position);
                 }
-                if (this.doFloat)
+                if (doFloat)
                 {
-                    if (this != null && this.crouch)
+                    if (this != null && crouch)
                     {
-                        if (floatMultiplier > 0.980000019073486)
+                        if (floatMultiplier > 0.98f)
                             this.vSpeed *= 0.8f;
-                        this.floatMultiplier = 0.8f;
+                        floatMultiplier = 0.8f;
                     }
                     else
                     {
-                        if (floatMultiplier > 0.980000019073486)
+                        if (floatMultiplier > 0.98f)
                             this.vSpeed *= 0.4f;
                         this.vSpeed *= 0.95f;
-                        this.floatMultiplier = 0.4f;
+                        floatMultiplier = 0.4f;
                     }
                 }
                 else
                 {
-                    if (flag5 && vSpeed > 1.0 && Math.Abs(this.vSpeed) < 0.00999999977648258)
+                    if (flag5 && vSpeed > 1.0 && Math.Abs(this.vSpeed) < 0.01f)
                     {
                         FluidData fluidData = (FluidData)HelperG.GfieldVal("PhysicsObject", "_curFluid", this);
                         SFX.Play("littleSplash", Rando.Float(0.8f, 0.9f), Rando.Float(-0.2f, 0.2f));
                     }
-                    this.floatMultiplier = 1f;
+                    floatMultiplier = 1f;
                 }
-                Recorder.LogVelocity(Math.Abs(this.hSpeed) + Math.Abs(this.vSpeed));
-                if (this._sleeping)
+                Recorder.LogVelocity(Math.Abs(hSpeed) + Math.Abs(this.vSpeed));
+                if (_sleeping)
                     return;
-                if (this.modFric)
-                    this.modFric = false;
+                if (modFric)
+                    modFric = false;
                 else
-                    this.specialFrictionMod = 1f;
+                    specialFrictionMod = 1f;
             }
         }
 
-        public void baseupdate() => this._didImpactSound = false;
+        public void baseupdate() => _didImpactSound = false;
 
         public override bool PlayCollideSound(ImpactedFrom from) => true;
 
         public override bool Destroy(DestroyType type = null)
         {
-            this._destroyed = true;
+            _destroyed = true;
             return true;
         }
     }

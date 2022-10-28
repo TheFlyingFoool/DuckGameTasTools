@@ -10,130 +10,158 @@ using System.Linq;
 
 namespace DuckGame
 {
-    public class inputFrame
-    {
-        public float lTrigger;
-        public float rTrigger;
-        public int[] inputs;
-        public int rng;
-        public bool LEFT;
-        public bool RIGHT;
-        public bool UP;
-        public bool DOWN;
-        public bool JUMP;
-        public bool SHOOT;
-        public bool GRAB;
-        public bool QUACK;
-        public bool RAGDOLL;
-        public bool START;
-        public bool STRAFE;
-        public bool SELECT;
-        public byte RNG;
-        public float LTRIGGER;
-        public float RTRIGGER;
-        public static bool oldway = true;
+	public class inputFrame
+	{
+		public inputFrame(byte[] bytes)
+		{
+			inputs = ((IEnumerable<byte>)bytes).Take(12).Select<byte, int>(x => x).ToArray();
+			rng = bytes[12];
+			lTrigger = BitConverter.ToSingle(bytes, 13);
+			rTrigger = BitConverter.ToSingle(bytes, 17);
+		}
 
-        public inputFrame(byte[] bytes)
-        {
-            this.inputs = ((IEnumerable<byte>)bytes).Take(12).Select<byte, int>(x => x).ToArray();
-            this.rng = bytes[12];
-            this.lTrigger = BitConverter.ToSingle(bytes, 13);
-            this.rTrigger = BitConverter.ToSingle(bytes, 17);
-        }
+		public byte[] write()
+		{
+			List<byte> byteList = new List<byte>();
+			byteList.AddRange(((IEnumerable<int>)inputs).Select(x => (byte)x).ToArray());
+			byteList.Add((byte)rng);
+			byteList.AddRange(BitConverter.GetBytes(lTrigger));
+			byteList.AddRange(BitConverter.GetBytes(rTrigger));
+			return byteList.ToArray();
+		}
 
-        public byte[] write()
-        {
-            List<byte> byteList = new List<byte>();
-            byteList.AddRange(((IEnumerable<int>)this.inputs).Select(x => (byte)x).ToArray());
-            byteList.Add((byte)this.rng);
-            byteList.AddRange(BitConverter.GetBytes(this.lTrigger));
-            byteList.AddRange(BitConverter.GetBytes(this.rTrigger));
-            return byteList.ToArray();
-        }
+		private byte[] toByte(object o)
+		{
+			byte[] result;
+			if (o is float)
+			{
+				result = BitConverter.GetBytes((float)o);
+			}
+			else if (o is bool)
+			{
+				result = new byte[]
+				{
+					(byte)(((bool)o) ? 1 : 0)
+				};
+			}
+			else
+			{
+				result = new byte[0];
+			}
+			return result;
+		}
 
-        private byte[] toByte(object o)
-        {
-            byte[] numArray;
-            switch (o)
-            {
-                case float num:
-                    numArray = BitConverter.GetBytes(num);
-                    break;
-                case bool flag:
-                    numArray = new byte[1]
-                    {
-            flag ? (byte) 1 : (byte) 0
-                    };
-                    break;
-                default:
-                    numArray = new byte[0];
-                    break;
-            }
-            return numArray;
-        }
+		public byte[] write2()
+		{
+			List<byte> list = new List<byte>();
+			list.Add((byte)(LEFT ? 1 : 0));
+			list.Add((byte)(RIGHT ? 1 : 0));
+			list.Add((byte)(UP ? 1 : 0));
+			list.Add((byte)(DOWN ? 1 : 0));
+			list.Add((byte)(JUMP ? 1 : 0));
+			list.Add((byte)(SHOOT ? 1 : 0));
+			list.Add((byte)(GRAB ? 1 : 0));
+			list.Add((byte)(QUACK ? 1 : 0));
+			list.Add((byte)(START ? 1 : 0));
+			list.Add((byte)(STRAFE ? 1 : 0));
+			list.Add((byte)(RAGDOLL ? 1 : 0));
+			list.Add((byte)(SELECT ? 1 : 0));
+			list.Add(RNG);
+			list.AddRange(toByte(LTRIGGER));
+			list.AddRange(toByte(RTRIGGER));
+			return list.ToArray();
+		}
 
-        public byte[] write2()
-        {
-            List<byte> byteList = new List<byte>();
-            byteList.Add(this.LEFT ? (byte)1 : (byte)0);
-            byteList.Add(this.RIGHT ? (byte)1 : (byte)0);
-            byteList.Add(this.UP ? (byte)1 : (byte)0);
-            byteList.Add(this.DOWN ? (byte)1 : (byte)0);
-            byteList.Add(this.JUMP ? (byte)1 : (byte)0);
-            byteList.Add(this.SHOOT ? (byte)1 : (byte)0);
-            byteList.Add(this.GRAB ? (byte)1 : (byte)0);
-            byteList.Add(this.QUACK ? (byte)1 : (byte)0);
-            byteList.Add(this.START ? (byte)1 : (byte)0);
-            byteList.Add(this.STRAFE ? (byte)1 : (byte)0);
-            byteList.Add(this.RAGDOLL ? (byte)1 : (byte)0);
-            byteList.Add(this.SELECT ? (byte)1 : (byte)0);
-            byteList.Add(this.RNG);
-            byteList.AddRange(this.toByte(LTRIGGER));
-            byteList.AddRange(this.toByte(RTRIGGER));
-            return byteList.ToArray();
-        }
+		public inputFrame(InputProfile inputProfile)
+		{
+			InputDevice lastActiveDevice = inputProfile.lastActiveDevice;
+			AnalogGamePad analogGamePad = null;
+			if (lastActiveDevice is GenericController)
+			{
+				analogGamePad = (lastActiveDevice as GenericController).device;
+			}
+			if (inputFrame.oldway)
+			{
+				LEFT = inputProfile.Down("LEFT");
+				RIGHT = inputProfile.Down("RIGHT");
+				UP = inputProfile.Down("UP");
+				DOWN = inputProfile.Down("DOWN");
+				JUMP = inputProfile.Down("JUMP");
+				SHOOT = inputProfile.Down("SHOOT");
+				GRAB = inputProfile.Down("GRAB");
+				QUACK = inputProfile.Down("QUACK");
+				START = inputProfile.Down("START");
+				STRAFE = inputProfile.Down("STRAFE");
+				RAGDOLL = inputProfile.Down("RAGDOLL");
+				SELECT = inputProfile.Down("SELECT");
+			}
+			else if (analogGamePad != null)
+			{
+				PadState padState = (PadState)HelperG.GfieldVal(typeof(AnalogGamePad), "_state", analogGamePad);
+				DevConsole.Log(padState.sticks.left.x.ToString() + " " + padState.sticks.left.y.ToString());
+				LEFT = (padState.sticks.left.x < -0.6f || padState.IsButtonDown(PadButton.LeftThumbstickLeft) || padState.IsButtonDown(PadButton.DPadLeft));
+				RIGHT = (padState.sticks.left.x > 0.6f || padState.IsButtonDown(PadButton.LeftThumbstickRight) || padState.IsButtonDown(PadButton.DPadRight));
+				UP = (padState.sticks.left.y > 0.6f || padState.IsButtonDown(PadButton.LeftThumbstickUp) || padState.IsButtonDown(PadButton.DPadUp));
+				DOWN = (padState.sticks.left.y < -0.6f || padState.IsButtonDown(PadButton.LeftThumbstickDown) || padState.IsButtonDown(PadButton.DPadDown));
+				JUMP = padState.IsButtonDown(PadButton.A);
+				SHOOT = padState.IsButtonDown(PadButton.X);
+				GRAB = padState.IsButtonDown(PadButton.Y);
+				QUACK = padState.IsButtonDown(PadButton.B);
+				START = padState.IsButtonDown(PadButton.Start);
+				STRAFE = padState.IsButtonDown(PadButton.LeftShoulder);
+				RAGDOLL = padState.IsButtonDown(PadButton.RightShoulder);
+				SELECT = padState.IsButtonDown(PadButton.Start);
+			}
+			RNG = 0;
+			LTRIGGER = 0f;
+			RTRIGGER = 0f;
+		}
 
-        public inputFrame(InputProfile inputProfile)
-        {
-            InputDevice lastActiveDevice = inputProfile.lastActiveDevice;
-            AnalogGamePad analogGamePad = null;
-            if (lastActiveDevice is GenericController)
-                analogGamePad = (lastActiveDevice as GenericController).device;
-            if (oldway)
-            {
-                this.LEFT = inputProfile.Down(nameof(LEFT));
-                this.RIGHT = inputProfile.Down(nameof(RIGHT));
-                this.UP = inputProfile.Down(nameof(UP));
-                this.DOWN = inputProfile.Down(nameof(DOWN));
-                this.JUMP = inputProfile.Down(nameof(JUMP));
-                this.SHOOT = inputProfile.Down(nameof(SHOOT));
-                this.GRAB = inputProfile.Down(nameof(GRAB));
-                this.QUACK = inputProfile.Down(nameof(QUACK));
-                this.START = inputProfile.Down(nameof(START));
-                this.STRAFE = inputProfile.Down(nameof(STRAFE));
-                this.RAGDOLL = inputProfile.Down(nameof(RAGDOLL));
-                this.SELECT = inputProfile.Down(nameof(SELECT));
-            }
-            else if (analogGamePad != null)
-            {
-                PadState padState = (PadState)HelperG.GfieldVal(typeof(AnalogGamePad), "_state", analogGamePad);
-                DevConsole.Log(padState.sticks.left.x.ToString() + " " + padState.sticks.left.y.ToString());
-                this.LEFT = padState.sticks.left.x < -0.600000023841858 || padState.IsButtonDown(PadButton.LeftThumbstickLeft) || padState.IsButtonDown(PadButton.DPadLeft);
-                this.RIGHT = padState.sticks.left.x > 0.600000023841858 || padState.IsButtonDown(PadButton.LeftThumbstickRight) || padState.IsButtonDown(PadButton.DPadRight);
-                this.UP = padState.sticks.left.y > 0.600000023841858 || padState.IsButtonDown(PadButton.LeftThumbstickUp) || padState.IsButtonDown(PadButton.DPadUp);
-                this.DOWN = padState.sticks.left.y < -0.600000023841858 || padState.IsButtonDown(PadButton.LeftThumbstickDown) || padState.IsButtonDown(PadButton.DPadDown);
-                this.JUMP = padState.IsButtonDown(PadButton.A);
-                this.SHOOT = padState.IsButtonDown(PadButton.X);
-                this.GRAB = padState.IsButtonDown(PadButton.Y);
-                this.QUACK = padState.IsButtonDown(PadButton.B);
-                this.START = padState.IsButtonDown(PadButton.Start);
-                this.STRAFE = padState.IsButtonDown(PadButton.LeftShoulder);
-                this.RAGDOLL = padState.IsButtonDown(PadButton.RightShoulder);
-                this.SELECT = padState.IsButtonDown(PadButton.Start);
-            }
-            this.RNG = 0;
-            this.LTRIGGER = 0.0f;
-            this.RTRIGGER = 0.0f;
-        }
-    }
+		static inputFrame()
+		{
+		}
+
+		public float lTrigger;
+
+		public float rTrigger;
+
+		public int[] inputs;
+
+		public int rng;
+
+		public bool LEFT;
+
+		public bool RIGHT;
+
+		public bool UP;
+
+		public bool DOWN;
+
+		public bool JUMP;
+
+		public bool SHOOT;
+
+		public bool GRAB;
+
+		public bool QUACK;
+
+		public bool RAGDOLL;
+
+		public bool START;
+
+		public bool STRAFE;
+
+		public bool SELECT;
+
+		public byte RNG;
+
+		public float LTRIGGER;
+
+		public float RTRIGGER;
+
+		public static bool oldway = true;
+	}
 }
+
+
+	

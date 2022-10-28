@@ -210,7 +210,7 @@ namespace DuckGame
             shotgun = false;
             if (Level.current is ChallengeLevel)
             {
-                this.waitingforDuck = true;
+                waitingforDuck = true;
                 if (debug)
                     tDev.loadInputs(TasMod.DebugFilePath);
             }
@@ -223,7 +223,7 @@ namespace DuckGame
 
         public updater()
         {
-            if (this.doupdateable)
+            if (doupdateable)
                 (typeof(Game).GetField("updateableComponents", BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic).GetValue(MonoMain.instance) as List<IUpdateable>).Add(this);
             current = this;
         }
@@ -238,7 +238,7 @@ namespace DuckGame
         {
             try
             {
-                this.UpdateBase();
+                UpdateBase();
             }
             catch
             {
@@ -255,9 +255,9 @@ namespace DuckGame
 
         public void UpdateBase()
         {
-            if (Level.current != this.prevLevel)
-                this.LevelChanged();
-            this.prevLevel = Level.current;
+            if (Level.current != prevLevel)
+                LevelChanged();
+            prevLevel = Level.current;
             if (Keyboard.Released(Keys.F7))
             {
                 if (recording)
@@ -302,7 +302,7 @@ namespace DuckGame
                 DevConsole.Log(doclip ? "clip finder" : "Disabled clip finder", doclip ? Color.Green : Color.Red);
             }
             if (Keyboard.Pressed(Keys.Enter) && DevConsole.open)
-                this.checkloadCommand();
+                checkloadCommand();
             if (tDev != null && tDev.Inputs.Length != 0 && tDev.currentFrame == 0)
                 tasDevice.rng = tDev.Inputs[0].rng;
             if (shotgun || tasDevice.rng > 0)
@@ -323,7 +323,7 @@ namespace DuckGame
                 if (currentDuck.holdObject is Gun && (int)gunField.GetValue(currentDuck.holdObject) > 1)
                     shotgun = true;
             }
-            if (!(Level.current is ChallengeLevel) || !this.waitingforDuck)
+            if (!(Level.current is ChallengeLevel) || !waitingforDuck)
                 return;
             Duck duck = null;
             using (IEnumerator<Thing> enumerator = Level.current.things[typeof(Duck)].GetEnumerator())
@@ -337,7 +337,7 @@ namespace DuckGame
                 return;
             try
             {
-                this.waitingforDuck = false;
+                waitingforDuck = false;
                 currentDuck = duck;
                 bool flag = false;
                 using (IEnumerator<Thing> enumerator = Level.current.things[typeof(showframe)].GetEnumerator())
@@ -350,7 +350,7 @@ namespace DuckGame
                 }
                 if (!flag)
                     Level.Add(new showframe());
-                this.startTAS();
+                startTAS();
             }
             catch
             {

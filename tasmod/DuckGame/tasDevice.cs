@@ -26,58 +26,58 @@ namespace DuckGame
           : base(index)
         {
             currentDevice = this;
-            this.defstateField = typeof(AnalogGamePad).GetField("_state", BindingFlags.Instance | BindingFlags.NonPublic);
-            this.defaultDevice = InputProfile.DefaultPlayer1.genericController.device;
+            defstateField = typeof(AnalogGamePad).GetField("_state", BindingFlags.Instance | BindingFlags.NonPublic);
+            defaultDevice = InputProfile.DefaultPlayer1.genericController.device;
         }
 
-        public void loadInputs(string inputFile) => this.Inputs = tasInput.read(inputFile);
+        public void loadInputs(string inputFile) => Inputs = tasInput.read(inputFile);
 
-        public void loadInputs(byte[] bytes) => this.Inputs = tasInput.read(bytes);
+        public void loadInputs(byte[] bytes) => Inputs = tasInput.read(bytes);
 
         public tasDevice(int index, byte[] inputBytes)
           : base(index)
         {
-            this.Inputs = tasInput.read(inputBytes);
+            Inputs = tasInput.read(inputBytes);
             currentDevice = this;
         }
 
         public void reset()
         {
-            this.did0once = false;
-            this.did0oncetwo = false;
-            this.currentFrame = 0;
-            this.stop();
+            did0once = false;
+            did0oncetwo = false;
+            currentFrame = 0;
+            stop();
         }
 
         public void stop()
         {
-            if (this.running)
+            if (running)
                 updater.current.StopTAS();
-            this.running = false;
+            running = false;
             rng = -1;
         }
 
-        public void start() => this.running = true;
+        public void start() => running = true;
 
         public override void Update()
         {
             try
             {
-                if (this.running)
+                if (running)
                 {
-                    if (this.currentFrame >= this.Inputs.Length)
+                    if (currentFrame >= Inputs.Length)
                     {
-                        this.reset();
+                        reset();
                         return;
                     }
-                    if (this.did0once && this.currentFrame > 1 && !this.did0oncetwo && updater.lastsavedstate != null && updater.lastsavedstate.Count > 0)
+                    if (did0once && currentFrame > 1 && !did0oncetwo && updater.lastsavedstate != null && updater.lastsavedstate.Count > 0)
                     {
                         updater.loadstate(updater.lastsavedstate);
-                        this.did0oncetwo = true;
+                        did0oncetwo = true;
                     }
-                    this.currentInput = this.Inputs[this.currentFrame];
-                    if (this.Inputs.Length > this.currentFrame + 1)
-                        rng = this.Inputs[this.currentFrame + 1].rng;
+                    currentInput = Inputs[currentFrame];
+                    if (Inputs.Length > currentFrame + 1)
+                        rng = Inputs[currentFrame + 1].rng;
                     if (updater.currentDuck != null)
                     {
                         Vec2 velocity = updater.currentDuck.velocity;
@@ -100,17 +100,17 @@ namespace DuckGame
                         string str6 = vec2_1.y >= 0.0 ? "y  " + vec2_1.y.ToString() : "y " + vec2_1.y.ToString();
                         string str7 = vec2_2.x >= 0.0 ? "x  " + vec2_2.x.ToString() : "x " + vec2_2.x.ToString();
                         string str8 = vec2_2.y >= 0.0 ? "y  " + vec2_2.y.ToString() : "y " + vec2_2.y.ToString();
-                        DevConsole.Log("Frame " + this.currentFrame.ToString() + " " + str3 + " " + str4 + " " + str1 + " " + str2 + " " + str5 + " " + str6 + " " + str7 + " " + str8 + (" can jump" + flag2.ToString()));
+                        DevConsole.Log("Frame " + currentFrame.ToString() + " " + str3 + " " + str4 + " " + str1 + " " + str2 + " " + str5 + " " + str6 + " " + str7 + " " + str8 + (" can jump" + flag2.ToString()));
                     }
-                    if (this.did0once)
-                        ++this.currentFrame;
-                    this.did0once = true;
+                    if (did0once)
+                        ++currentFrame;
+                    did0once = true;
                 }
             }
             catch (Exception ex)
             {
                 Mod.Debug.Log("couldnt update controller " + ex.Message);
-                this.reset();
+                reset();
             }
             base.Update();
         }
@@ -121,9 +121,9 @@ namespace DuckGame
         {
             PadState padState = new PadState();
             PadState state;
-            if (!this.running)
+            if (!running)
                 state = padState;
-            else if (this.currentInput == null)
+            else if (currentInput == null)
             {
                 state = padState;
             }
@@ -132,11 +132,11 @@ namespace DuckGame
                 foreach (object key in Enum.GetValues(typeof(PadButton)))
                 {
                     int index1;
-                    if (tasInput.Keys.TryGetValue((int)key, out index1) && this.currentInput.inputs[index1] > 0)
+                    if (tasInput.Keys.TryGetValue((int)key, out index1) && currentInput.inputs[index1] > 0)
                         padState.buttons |= (PadButton)key;
                 }
-                padState.triggers.left = this.currentInput.lTrigger;
-                padState.triggers.right = this.currentInput.rTrigger;
+                padState.triggers.left = currentInput.lTrigger;
+                padState.triggers.right = currentInput.rTrigger;
                 state = padState;
             }
             return state;

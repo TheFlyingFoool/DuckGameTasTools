@@ -28,16 +28,16 @@ namespace DuckGame
         public showframe()
           : base()
         {
-            this.dootherthing = true;
-            this.layer = Layer.Foreground;
+            dootherthing = true;
+            layer = Layer.Foreground;
             Level.Add(new w());
-            this.linestodraw = new HashSet<List<object>>();
+            linestodraw = new HashSet<List<object>>();
         }
 
         public override void Update()
         {
-            lock (this.linestodraw)
-                this.linestodraw.Clear();
+            lock (linestodraw)
+                linestodraw.Clear();
             if (updater.doclip)
             {
                 windowvalues.Clear();
@@ -79,7 +79,7 @@ namespace DuckGame
                         for (int index = 0; index < 10; ++index)
                         {
                             recDuck.UpdatePhysics();
-                            this.linestodraw.Add(this.Line(position, recDuck.position, Color.Red));
+                            linestodraw.Add(Line(position, recDuck.position, Color.Red));
                             position = recDuck.position;
                             if (recDuck._destroyed)
                                 break;
@@ -87,7 +87,7 @@ namespace DuckGame
                     }
                     SimphysicsObjects.Clear();
                     SFX.enabled = true;
-                    this.linestodraw.Add(this.Line(showframe.currentDucklocal.ragdoll.part2.position, vec2, Color.Green));
+                    linestodraw.Add(Line(showframe.currentDucklocal.ragdoll.part2.position, vec2, Color.Green));
                 }
             }
             bool flag1 = false;
@@ -180,7 +180,7 @@ namespace DuckGame
                                 position5 = recDuck.position;
                                 if (flag4)
                                 {
-                                    this.linestodraw.Add(this.Line(position5, recDuck.position, Color.Yellow));
+                                    linestodraw.Add(Line(position5, recDuck.position, Color.Yellow));
                                 }
                                 else
                                 {
@@ -218,7 +218,7 @@ namespace DuckGame
                         if (flag1)
                         {
                             vec4List1.Add(new Vec4(position1.x, position1.y, position2.x, position2.y));
-                            this.linestodraw.Add(this.Line(position1, position2, Color.Purple));
+                            linestodraw.Add(Line(position1, position2, Color.Purple));
                             if (olddoclip && (ragdoll2 == null || ragdoll2.part2 == null) && currentDucklocal != null)
                             {
                                 currentDucklocal.hSpeed = hSpeed;
@@ -233,7 +233,7 @@ namespace DuckGame
                             flag1 = Level.CheckLine<Block>(position1, position2) != null;
                             if (flag1)
                                 flag2 = true;
-                            this.linestodraw.Add(this.Line(position1, recRagdoll.part2.position, Color.Orange));
+                            linestodraw.Add(Line(position1, recRagdoll.part2.position, Color.Orange));
                         }
                         position1 = recRagdoll.part2.position;
                         if (recRagdoll.part2.destroyed || recRagdoll.part1.destroyed || recRagdoll.part3.destroyed)
@@ -243,7 +243,7 @@ namespace DuckGame
                 else
                     break;
             }
-            if (((!this.purplething ? 0 : (!cancerisbad.Contains(vec4List1) ? 1 : 0)) & (flag2 ? 1 : 0)) != 0)
+            if (((!purplething ? 0 : (!cancerisbad.Contains(vec4List1) ? 1 : 0)) & (flag2 ? 1 : 0)) != 0)
             {
                 cancerisbad.Add(vec4List1);
                 List<object> objectList = new List<object>()
@@ -278,10 +278,10 @@ namespace DuckGame
         public override void Draw()
         {
             HashSet<List<object>> objectListSet = null;
-            lock (this.linestodraw)
+            lock (linestodraw)
             {
                 objectListSet = new HashSet<List<object>>(linestodraw);
-                this.linestodraw.Clear();
+                linestodraw.Clear();
             }
             foreach (List<object> objectList in objectListSet)
                 Graphics.DrawLine((Vec2)objectList[0], (Vec2)objectList[1], (Color)objectList[2], 2f);
@@ -406,7 +406,7 @@ namespace DuckGame
                                         if (ragdoll._timeSinceNudge > 1.0)
                                             flag1 = true;
                                     }
-                                    else if (!ragdoll._part1.held && !ragdoll._part2.held && !ragdoll._part3.held && (ragdoll.tongueStuck == Vec2.Zero || ragdoll.tongueShakes > 5) && this.isServerForObject)
+                                    else if (!ragdoll._part1.held && !ragdoll._part2.held && !ragdoll._part3.held && (ragdoll.tongueStuck == Vec2.Zero || ragdoll.tongueShakes > 5) && isServerForObject)
                                         flag2 = true;
                                 }
                                 if (!ragdoll._duck.dead)

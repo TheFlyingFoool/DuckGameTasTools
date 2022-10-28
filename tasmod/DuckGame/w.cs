@@ -5,7 +5,7 @@
         public w()
           : base()
         {
-            this.layer = Layer.HUD;
+            layer = Layer.HUD;
         }
 
         public override void Update()

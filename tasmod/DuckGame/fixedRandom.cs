@@ -15,22 +15,22 @@ namespace DuckGame
 
         public fixedRandom(int num)
         {
-            this.maxnextdouble = 1.0 / 1.0;
-            this.number = num / (float)byte.MaxValue;
+            maxnextdouble = 1;
+            number = num / (float)byte.MaxValue;
         }
 
         public override int Next(int maxValue)
         {
-            --maxValue;
+            maxValue--;
             return (int)(number * (double)maxValue);
         }
 
         public override int Next(int minValue, int maxValue)
         {
-            --maxValue;
+            maxValue--;
             return (int)((maxValue - (double)minValue) * number + minValue);
         }
 
-        public override double NextDouble() => number * this.maxnextdouble;
+        public override double NextDouble() => number * maxnextdouble;
     }
 }

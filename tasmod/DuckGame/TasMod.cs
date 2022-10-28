@@ -27,7 +27,7 @@ namespace DuckGame
             Input.GetInputDevices().Insert(0, updater.tDev);
             updater.tDev.loadInputs(FilePath);
             InputProfile defaultPlayer1 = InputProfile.DefaultPlayer1;
-            new Thread(new ThreadStart(this.wait)).Start();
+            new Thread(new ThreadStart(wait)).Start();
             base.OnPostInitialize();
         }
 

@@ -35,22 +35,22 @@ namespace DuckGame
         public SimDuck(float xpos, float ypos)
           : base(xpos, ypos)
         {
-            this.firstgo = true;
-            this.depth = -0.5f;
-            this.solid = false;
-            this.redosim = true;
-            this.Velocity = Vec2.Zero;
-            this.Lcancerisbad = new List<List<Vec4>>();
-            this.LCancerFrame = new List<Vec2>();
+            firstgo = true;
+            depth = -0.5f;
+            solid = false;
+            redosim = true;
+            Velocity = Vec2.Zero;
+            Lcancerisbad = new List<List<Vec4>>();
+            LCancerFrame = new List<Vec2>();
         }
 
         public override void Update()
         {
-            if (Level.current == null || !Level.current.simulatePhysics || !this.redosim)
+            if (Level.current == null || !Level.current.simulatePhysics || !redosim)
                 return;
-            this.redosim = false;
-            RecDuck who = new RecDuck(this.x, this.y);
-            who.velocity = this.Velocity;
+            redosim = false;
+            RecDuck who = new RecDuck(x, y);
+            who.velocity = Velocity;
             bool flag1 = false;
             float ypos = who.y + 4f;
             float degrees;
@@ -135,10 +135,10 @@ namespace DuckGame
                                 if (recDuck._destroyed)
                                     break;
                             }
-                            if (!this.Lcancerisbad.Contains(vec4List2))
+                            if (!Lcancerisbad.Contains(vec4List2))
                             {
-                                this.Lcancerisbad.Add(vec4List2);
-                                this.LCancerFrame.Add(new Vec2(tasDevice.currentDevice.currentFrame, (float)showframe.Offset.NextDouble()));
+                                Lcancerisbad.Add(vec4List2);
+                                LCancerFrame.Add(new Vec2(tasDevice.currentDevice.currentFrame, (float)showframe.Offset.NextDouble()));
                                 DevConsole.Log("thing " + tasDevice.currentDevice.currentFrame.ToString() + " " + index1.ToString() + " " + num3.ToString());
                             }
                         }
@@ -159,12 +159,12 @@ namespace DuckGame
 
         public override void Draw()
         {
-            Graphics.DrawLine(new Vec2(this.x - 1f, this.y), new Vec2(this.x + 1f, this.y), Color.Green);
-            Graphics.DrawLine(new Vec2(this.x, this.y - 1f), new Vec2(this.x, this.y + 1f), Color.Green);
-            for (int index1 = 0; index1 < this.Lcancerisbad.Count; ++index1)
+            Graphics.DrawLine(new Vec2(x - 1f, y), new Vec2(x + 1f, y), Color.Green);
+            Graphics.DrawLine(new Vec2(x, y - 1f), new Vec2(x, y + 1f), Color.Green);
+            for (int index1 = 0; index1 < Lcancerisbad.Count; ++index1)
             {
-                Vec2 vec2 = this.LCancerFrame[index1];
-                List<Vec4> vec4List = this.Lcancerisbad[index1];
+                Vec2 vec2 = LCancerFrame[index1];
+                List<Vec4> vec4List = Lcancerisbad[index1];
                 bool flag = false;
                 for (int index2 = 0; index2 < vec4List.Count; ++index2)
                 {
@@ -198,7 +198,7 @@ namespace DuckGame
 
         public override void Initialize()
         {
-            this.Velocity = new Vec2(this.hspeed, this.vspeed);
+            Velocity = new Vec2(hspeed, vspeed);
             base.Initialize();
         }
 
@@ -213,8 +213,8 @@ namespace DuckGame
         public override bool Deserialize(BinaryClassChunk node)
         {
             base.Deserialize(node);
-            this.hspeed = node.GetProperty<float>("hspeed");
-            this.vspeed = node.GetProperty<float>("vspeed");
+            hspeed = node.GetProperty<float>("hspeed");
+            vspeed = node.GetProperty<float>("vspeed");
             return true;
         }
 
@@ -231,10 +231,10 @@ namespace DuckGame
             base.LegacyDeserialize(node);
             DXMLNode dxmlNode1 = node.Element("hspeed");
             if (dxmlNode1 != null)
-                this.hspeed = Convert.ToSingle(dxmlNode1.Value);
+                hspeed = Convert.ToSingle(dxmlNode1.Value);
             DXMLNode dxmlNode2 = node.Element("vspeed");
             if (dxmlNode2 != null)
-                this.vspeed = Convert.ToSingle(dxmlNode2.Value);
+                vspeed = Convert.ToSingle(dxmlNode2.Value);
             return true;
         }
     }

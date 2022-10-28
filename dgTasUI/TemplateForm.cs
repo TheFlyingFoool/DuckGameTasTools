@@ -34,12 +34,12 @@ namespace dgTasUI
         private Button button1;
         private Button button2;
 
-        private void button2_Click(object sender, EventArgs e) => this.Hide();
+        private void button2_Click(object sender, EventArgs e) => Hide();
 
         private void button1_Click(object sender, EventArgs e)
         {
-            this.Save();
-            this.Hide();
+            Save();
+            Hide();
         }
 
         public void load(string file)
@@ -63,7 +63,7 @@ namespace dgTasUI
                 }
                 foreach (FrameInfo frameInfo in list)
                     ++frameInfo.stopFrame;
-                this.frames = list;
+                frames = list;
             }
         }
 
@@ -80,7 +80,7 @@ namespace dgTasUI
                         int num = (int)fieldInfo1.GetValue(this);
                         if (num >= 0)
                         {
-                            using (List<FrameInfo>.Enumerator enumerator = this.frames.GetEnumerator())
+                            using (List<FrameInfo>.Enumerator enumerator = frames.GetEnumerator())
                             {
                                 while (enumerator.MoveNext())
                                 {
@@ -102,8 +102,8 @@ namespace dgTasUI
 
         public TemplateForm(string fileName)
         {
-            this.InitializeComponent();
-            this.load(fileName);
+            InitializeComponent();
+            load(fileName);
         }
 
         public GroupBox generateGroupBox(string text, int y)
@@ -113,7 +113,7 @@ namespace dgTasUI
             RadioButton radioButton2 = new RadioButton();
             RadioButton radioButton3 = new RadioButton();
             groupBox.SuspendLayout();
-            this.SuspendLayout();
+            SuspendLayout();
             groupBox.Controls.Add(radioButton3);
             groupBox.Controls.Add(radioButton2);
             groupBox.Controls.Add(radioButton1);
@@ -133,7 +133,7 @@ namespace dgTasUI
             radioButton1.Text = "KEEP SAME";
             radioButton1.Checked = true;
             radioButton1.UseVisualStyleBackColor = true;
-            radioButton1.CheckedChanged += new EventHandler(this.checkchanged);
+            radioButton1.CheckedChanged += new EventHandler(checkchanged);
             radioButton2.AutoSize = true;
             radioButton2.Location = new Point(98, 17);
             radioButton2.Name = "radioButton2";
@@ -142,7 +142,7 @@ namespace dgTasUI
             radioButton2.TabStop = true;
             radioButton2.Text = "TRUE";
             radioButton2.UseVisualStyleBackColor = true;
-            radioButton2.CheckedChanged += new EventHandler(this.checkchanged);
+            radioButton2.CheckedChanged += new EventHandler(checkchanged);
             radioButton3.AutoSize = true;
             radioButton3.Location = new Point(159, 17);
             radioButton3.Name = "radioButton3";
@@ -151,7 +151,7 @@ namespace dgTasUI
             radioButton3.TabStop = true;
             radioButton3.Text = "FALSE";
             radioButton3.UseVisualStyleBackColor = true;
-            radioButton3.CheckedChanged += new EventHandler(this.checkchanged);
+            radioButton3.CheckedChanged += new EventHandler(checkchanged);
             groupBox.ResumeLayout(false);
             groupBox.PerformLayout();
             return groupBox;
@@ -174,48 +174,48 @@ namespace dgTasUI
             int index = 0;
             for (int y = 13; y < stringList.Count * 45 + 13; y += 45)
             {
-                this.Controls.Add(this.generateGroupBox(stringList[index], y));
+                Controls.Add(generateGroupBox(stringList[index], y));
                 ++index;
             }
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing && this.components != null)
-                this.components.Dispose();
+            if (disposing && components != null)
+                components.Dispose();
             base.Dispose(disposing);
         }
 
         private void InitializeComponent()
         {
-            this.button1 = new Button();
-            this.button2 = new Button();
-            this.SuspendLayout();
-            this.button1.Location = new Point(12, 588);
-            this.button1.Name = "button1";
-            this.button1.Size = new Size(208, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "IMPORT";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new EventHandler(this.button1_Click);
-            this.button2.Location = new Point(12, 559);
-            this.button2.Name = "button2";
-            this.button2.Size = new Size(208, 23);
-            this.button2.TabIndex = 1;
-            this.button2.Text = "CANCEL";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new EventHandler(this.button2_Click);
-            this.AutoScaleDimensions = new SizeF(6f, 13f);
-            this.AutoScaleMode = AutoScaleMode.Font;
-            this.ClientSize = new Size(232, 623);
-            this.ControlBox = false;
-            this.Controls.Add(button2);
-            this.Controls.Add(button1);
-            this.FormBorderStyle = FormBorderStyle.FixedSingle;
-            this.Name = "TemplateForm";
-            this.Text = "Import Template";
-            this.Load += new EventHandler(this.TemplateForm_Load);
-            this.ResumeLayout(false);
+            button1 = new Button();
+            button2 = new Button();
+            SuspendLayout();
+            button1.Location = new Point(12, 588);
+            button1.Name = "button1";
+            button1.Size = new Size(208, 23);
+            button1.TabIndex = 0;
+            button1.Text = "IMPORT";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += new EventHandler(button1_Click);
+            button2.Location = new Point(12, 559);
+            button2.Name = "button2";
+            button2.Size = new Size(208, 23);
+            button2.TabIndex = 1;
+            button2.Text = "CANCEL";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += new EventHandler(button2_Click);
+            AutoScaleDimensions = new SizeF(6f, 13f);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(232, 623);
+            ControlBox = false;
+            Controls.Add(button2);
+            Controls.Add(button1);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            Name = "TemplateForm";
+            Text = "Import Template";
+            Load += new EventHandler(TemplateForm_Load);
+            ResumeLayout(false);
         }
     }
 }
