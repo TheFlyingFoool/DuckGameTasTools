@@ -1,0 +1,145 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: DuckGame.tasDevice
+// Assembly: tasmod, Version=69.420.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: F552643C-C31D-4CFF-B7DA-3A8581E06C76
+// Assembly location: C:\Users\daniel\Documents\DuckGame\76561198124539558\Mods\tasmod\tasmod.dll
+
+using System;
+using System.Reflection;
+
+namespace DuckGame
+{
+    public class tasDevice : XInputPad
+    {
+        public static tasDevice currentDevice;
+        public inputFrame[] Inputs;
+        public inputFrame currentInput;
+        public int currentFrame;
+        public static int rng = -1;
+        public bool running;
+        public AnalogGamePad defaultDevice;
+        public FieldInfo defstateField;
+        public bool did0once;
+        public bool did0oncetwo;
+
+        public tasDevice(int index)
+          : base(index)
+        {
+            currentDevice = this;
+            this.defstateField = typeof(AnalogGamePad).GetField("_state", BindingFlags.Instance | BindingFlags.NonPublic);
+            this.defaultDevice = InputProfile.DefaultPlayer1.genericController.device;
+        }
+
+        public void loadInputs(string inputFile) => this.Inputs = tasInput.read(inputFile);
+
+        public void loadInputs(byte[] bytes) => this.Inputs = tasInput.read(bytes);
+
+        public tasDevice(int index, byte[] inputBytes)
+          : base(index)
+        {
+            this.Inputs = tasInput.read(inputBytes);
+            currentDevice = this;
+        }
+
+        public void reset()
+        {
+            this.did0once = false;
+            this.did0oncetwo = false;
+            this.currentFrame = 0;
+            this.stop();
+        }
+
+        public void stop()
+        {
+            if (this.running)
+                updater.current.StopTAS();
+            this.running = false;
+            rng = -1;
+        }
+
+        public void start() => this.running = true;
+
+        public override void Update()
+        {
+            try
+            {
+                if (this.running)
+                {
+                    if (this.currentFrame >= this.Inputs.Length)
+                    {
+                        this.reset();
+                        return;
+                    }
+                    if (this.did0once && this.currentFrame > 1 && !this.did0oncetwo && updater.lastsavedstate != null && updater.lastsavedstate.Count > 0)
+                    {
+                        updater.loadstate(updater.lastsavedstate);
+                        this.did0oncetwo = true;
+                    }
+                    this.currentInput = this.Inputs[this.currentFrame];
+                    if (this.Inputs.Length > this.currentFrame + 1)
+                        rng = this.Inputs[this.currentFrame + 1].rng;
+                    if (updater.currentDuck != null)
+                    {
+                        Vec2 velocity = updater.currentDuck.velocity;
+                        string str1 = velocity.x >= 0.0 ? "x  " + velocity.x.ToString() : "x " + velocity.x.ToString();
+                        string str2 = velocity.y >= 0.0 ? "y  " + velocity.y.ToString() : "y " + velocity.y.ToString();
+                        int num = (int)HelperG.GfieldVal(typeof(Duck), "_wallJump", showframe.currentDucklocal);
+                        bool flag1 = (bool)HelperG.GfieldVal(typeof(Duck), "atWall", showframe.currentDucklocal);
+                        bool flag2 = showframe.currentDucklocal._groundValid > 0 && !showframe.currentDucklocal.crouchLock || flag1 && num == 0 || showframe.currentDucklocal.doFloat;
+                        Vec2 position = updater.currentDuck.position;
+                        Vec2 vec2_1 = Vec2.Zero;
+                        Vec2 vec2_2 = Vec2.Zero;
+                        if (updater.currentDuck.ragdoll != null && updater.currentDuck.ragdoll.part1 != null)
+                        {
+                            vec2_1 = updater.currentDuck.ragdoll.part1.position;
+                            vec2_2 = updater.currentDuck.ragdoll.part1.velocity;
+                        }
+                        string str3 = position.x >= 0.0 ? "x  " + position.x.ToString() : "x " + position.x.ToString();
+                        string str4 = position.y >= 0.0 ? "y  " + position.y.ToString() : "y " + position.y.ToString();
+                        string str5 = vec2_1.x >= 0.0 ? "x  " + vec2_1.x.ToString() : "x " + vec2_1.x.ToString();
+                        string str6 = vec2_1.y >= 0.0 ? "y  " + vec2_1.y.ToString() : "y " + vec2_1.y.ToString();
+                        string str7 = vec2_2.x >= 0.0 ? "x  " + vec2_2.x.ToString() : "x " + vec2_2.x.ToString();
+                        string str8 = vec2_2.y >= 0.0 ? "y  " + vec2_2.y.ToString() : "y " + vec2_2.y.ToString();
+                        DevConsole.Log("Frame " + this.currentFrame.ToString() + " " + str3 + " " + str4 + " " + str1 + " " + str2 + " " + str5 + " " + str6 + " " + str7 + " " + str8 + (" can jump" + flag2.ToString()));
+                    }
+                    if (this.did0once)
+                        ++this.currentFrame;
+                    this.did0once = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Mod.Debug.Log("couldnt update controller " + ex.Message);
+                this.reset();
+            }
+            base.Update();
+        }
+
+        public override bool MapDown(int mapping, bool any = false) => base.MapDown(mapping, any);
+
+        protected override PadState GetState(int index)
+        {
+            PadState padState = new PadState();
+            PadState state;
+            if (!this.running)
+                state = padState;
+            else if (this.currentInput == null)
+            {
+                state = padState;
+            }
+            else
+            {
+                foreach (object key in Enum.GetValues(typeof(PadButton)))
+                {
+                    int index1;
+                    if (tasInput.Keys.TryGetValue((int)key, out index1) && this.currentInput.inputs[index1] > 0)
+                        padState.buttons |= (PadButton)key;
+                }
+                padState.triggers.left = this.currentInput.lTrigger;
+                padState.triggers.right = this.currentInput.rTrigger;
+                state = padState;
+            }
+            return state;
+        }
+    }
+}

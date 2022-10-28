@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--Project was exported from assembly: C:\Users\daniel\Documents\DuckGame\76561198124539558\Mods\tasmod\tasmod.dll-->
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{767C411E-C24D-4A98-9BC9-08E4AACC27CD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AssemblyName>tasmod</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <ApplicationVersion>69.420.0.0</ApplicationVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>..\..\bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DuckGame">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Duck Game\DuckGame.exe</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="HarmonyInternal\ReflectionExtensions.cs" />
+    <Compile Include="DuckGame\fixedRandom.cs" />
+    <Compile Include="DuckGame\inputFrame.cs" />
+    <Compile Include="DuckGame\showframe.cs" />
+    <Compile Include="DuckGame\w.cs" />
+    <Compile Include="DuckGame\tasDevice.cs" />
+    <Compile Include="DuckGame\tasInput.cs" />
+    <Compile Include="DuckGame\updater.cs" />
+    <Compile Include="DuckGame\HelperG.cs" />
+    <Compile Include="DuckGame\RecDuck.cs" />
+    <Compile Include="DuckGame\RecRagdollPart.cs" />
+    <Compile Include="DuckGame\RecRagdoll.cs" />
+    <Compile Include="DuckGame\MPatch.cs" />
+    <Compile Include="DuckGame\SimDuck.cs" />
+    <Compile Include="DuckGame\TasMod.cs" />
+    <Compile Include="Patchs\SpringPatch.cs" />
+    <Compile Include="Patchs\MonoMainPatch.cs" />
+    <Compile Include="Patchs\PatchInputProfile.cs" />
+    <Compile Include="Patchs\GraphicsPatch.cs" />
+    <Compile Include="Patchs\ChainsawPatch.cs" />
+    <Compile Include="Patchs\RagdollPatch.cs" />
+    <Compile Include="HarmonyInternal\CodeInstruction.cs" />
+    <Compile Include="HarmonyInternal\AccessTools.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
