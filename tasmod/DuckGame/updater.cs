@@ -43,7 +43,6 @@ namespace DuckGame
             TasMod.MapToDefault(tDev);
             tDev.start();
         }
-
         private void checkloadCommand()
         {
             List<string> list = ((IEnumerable<string>)DevConsole.core.previousLines.Last().ToLower().Split(' ')).Where(x => !string.IsNullOrEmpty(x)).ToList();
@@ -75,132 +74,126 @@ namespace DuckGame
                     }
                 }
             }
-            else
+            else if (list[0] == "ss")
             {
-                if (list[0] == "ss")
+                DevConsole.core.lines.Last().color = Color.Black;
+                if (list.Count < 2)
                 {
-                    DevConsole.core.lines.Last().color = Color.Black;
-                    if (list.Count < 2)
+                    DevConsole.Log("invalid syntax: ss <state name>", Color.Red);
+                    return;
+                }
+                foreach(Duck current in Level.current.things[typeof(Duck)])
+                {
+                    if (current is TargetDuck)
+                        continue;
+                    List<object> objectList = new List<object>();
+                    Dictionary<string, Dictionary<FieldInfo, object>> dictionary = new Dictionary<string, Dictionary<FieldInfo, object>>();
+                    objectList.Add(current.sleeping);
+                    objectList.Add(current.position);
+                    objectList.Add(current.velocity);
+                    objectList.Add(current.sliding);
+                    objectList.Add(current.jumping);
+                    objectList.Add(current._jumpValid);
+                    objectList.Add(current.framesSinceJump);
+                    objectList.Add(current._hovering);
+                    objectList.Add(current._groundValid);
+                    objectList.Add(current.skipPlatFrames);
+                    objectList.Add(current.strafing);
+                    objectList.Add(current.sliding);
+                    objectList.Add(current.crouch);
+                    objectList.Add(current.slideBuildup);
+                    objectList.Add(tasDevice.currentDevice.currentFrame);
+                    int num1 = -1;
+                    foreach (Holdable holdable in Level.current.things[typeof(Holdable)])
                     {
-                        DevConsole.Log("invalid syntax: ss <state name>", Color.Red);
-                        return;
-                    }
-                    using (IEnumerator<Thing> enumerator = Level.current.things[typeof(Duck)].GetEnumerator())
-                    {
-                        if (enumerator.MoveNext())
+                        object obj = holdable;
+                        int num2 = 0;
+                        string key;
+                        while (true)
                         {
-                            Duck current = (Duck)enumerator.Current;
-                            List<object> objectList = new List<object>();
-                            Dictionary<string, Dictionary<FieldInfo, object>> dictionary = new Dictionary<string, Dictionary<FieldInfo, object>>();
-                            objectList.Add(current.sleeping);
-                            objectList.Add(current.position);
-                            objectList.Add(current.velocity);
-                            objectList.Add(current.sliding);
-                            objectList.Add(current.jumping);
-                            objectList.Add(current._jumpValid);
-                            objectList.Add(current.framesSinceJump);
-                            objectList.Add(current._hovering);
-                            objectList.Add(current._groundValid);
-                            objectList.Add(current.skipPlatFrames);
-                            objectList.Add(current.strafing);
-                            objectList.Add(current.sliding);
-                            objectList.Add(current.crouch);
-                            objectList.Add(current.slideBuildup);
-                            objectList.Add(tasDevice.currentDevice.currentFrame);
-                            int num1 = -1;
-                            foreach (Holdable holdable in Level.current.things[typeof(Holdable)])
-                            {
-                                object obj = holdable;
-                                int num2 = 0;
-                                string key;
-                                while (true)
-                                {
-                                    key = obj.GetType().ToString() + num2.ToString();
-                                    if (dictionary.Keys.Contains(key))
-                                        ++num2;
-                                    else
-                                        break;
-                                }
-                                dictionary[key] = new Dictionary<FieldInfo, object>()
-                {
-                  {
-                    typeof (Holdable).GetField("position", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic),
-                     holdable.position
-                  },
-                  {
-                    typeof (Holdable).GetField("_angle", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic),
-                     holdable._angle
-                  },
-                  {
-                    typeof (Holdable).GetField("_hSpeed", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic),
-                     holdable._hSpeed
-                  },
-                  {
-                    typeof (Holdable).GetField("_grounded", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic),
-                     holdable.grounded
-                  }
-                };
-                            }
-                            objectList.Add(num1);
-                            objectList.Add(dictionary);
-                            savestates[list[1]] = objectList;
+                            key = obj.GetType().ToString() + num2.ToString();
+                            if (dictionary.Keys.Contains(key))
+                                ++num2;
+                            else
+                                break;
                         }
+                        dictionary[key] = new Dictionary<FieldInfo, object>() {
+                                {
+                                    typeof(Holdable).GetField("position",BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic),
+                                    holdable.position
+                                },
+                                {
+                                    typeof(Holdable).GetField("_angle", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic),
+                                     holdable._angle
+                                },
+                                {
+                                    typeof(Holdable).GetField("_hSpeed", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic),
+                                    holdable._hSpeed
+                                },
+                                {
+                                    typeof(Holdable).GetField("_grounded", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic),
+                                    holdable.grounded
+                                }
+                            };
+
                     }
+                    objectList.Add(num1);
+                    objectList.Add(dictionary);
+                    savestates[list[1]] = objectList;
+                    break;
                 }
-                if (list[0] == "sl")
+            }
+            else if (list[0] == "sl")
+            {
+                DevConsole.core.lines.Last().color = Color.Black;
+                if (list.Count < 2)
                 {
-                    DevConsole.core.lines.Last().color = Color.Black;
-                    if (list.Count < 2)
-                    {
-                        DevConsole.Log("invalid syntax: sl <state name>", Color.Red);
-                        return;
-                    }
-                    if (!savestates.Keys.Contains(list[1]))
-                    {
-                        DevConsole.Log("no save state found", Color.Red);
-                        return;
-                    }
-                    lastsavedstate = savestates[list[1]];
-                    loadstate(savestates[list[1]]);
+                    DevConsole.Log("invalid syntax: sl <state name>", Color.Red);
+                    return;
                 }
-                if (list[0] == "unloadtas")
+                if (!savestates.Keys.Contains(list[1]))
                 {
-                    DevConsole.core.lines.Last().color = Color.Black;
-                    DevConsole.Log("UNLOADED CURRENT TAS", Color.Green);
-                    tDev.loadInputs("");
+                    DevConsole.Log("no save state found", Color.Red);
+                    return;
                 }
-                else
+                lastsavedstate = savestates[list[1]];
+                loadstate(savestates[list[1]]);
+            }
+            else if (list[0] == "unloadtas")
+            {
+                DevConsole.core.lines.Last().color = Color.Black;
+                DevConsole.Log("UNLOADED CURRENT TAS", Color.Green);
+                tDev.loadInputs("");
+            }
+            else if(list[0] == "duck")
+                RecDuck.physicsfcksit = !RecDuck.physicsfcksit;
+            else if(list[0] == "maxragjump")
+            {
+                RagdollPatch.maxragjump = !RagdollPatch.maxragjump;
+                DevConsole.Log("maxragjump " + RagdollPatch.maxragjump.ToString(), Color.Green);
+            }
+            else if (list[0] == "order")
+            {
+                DevConsole.core.lines.Last().color = Color.Black;
+                foreach (Thing thing in Level.current.things)
                 {
-                    if (list[0] == "duck")
-                        RecDuck.physicsfcksit = !RecDuck.physicsfcksit;
-                    if (list[0] == "maxragjump")
+                    string[] strArray = new string[5]
                     {
-                        RagdollPatch.maxragjump = !RagdollPatch.maxragjump;
-                        DevConsole.Log("maxragjump " + RagdollPatch.maxragjump.ToString(), Color.Green);
-                    }
-                    if (!(list[0] == "order"))
-                        return;
-                    DevConsole.core.lines.Last().color = Color.Black;
-                    foreach (Thing thing in Level.current.things)
-                    {
-                        string[] strArray = new string[5]
-                        {
-              thing.GetType().ToString(),
-              " ",
-              null,
-              null,
-              null
-                        };
-                        float num = thing.x;
-                        strArray[2] = num.ToString();
-                        strArray[3] = " ";
-                        num = thing.y;
-                        strArray[4] = num.ToString();
-                        DevConsole.Log(string.Concat(strArray), Color.Green);
-                    }
-                    DevConsole.Log("UNLOADED CURRENT TAS", Color.Green);
-                    tDev.loadInputs("");
+                          thing.GetType().ToString(),
+                          " ",
+                          null,
+                          null,
+                          null
+                    };
+                    float num = thing.x;
+                    strArray[2] = num.ToString();
+                    strArray[3] = " ";
+                    num = thing.y;
+                    strArray[4] = num.ToString();
+                    DevConsole.Log(string.Concat(strArray), Color.Green);
                 }
+                DevConsole.Log("UNLOADED CURRENT TAS", Color.Green);
+                tDev.loadInputs("");
             }
         }
 
@@ -362,10 +355,12 @@ namespace DuckGame
         public static void loadstate(List<object> state)
         {
             Duck duck = null;
-            using (IEnumerator<Thing> enumerator = Level.current.things[typeof(Duck)].GetEnumerator())
+            foreach(Duck duck1 in Level.current.things[typeof(Duck)])
             {
-                if (enumerator.MoveNext())
-                    duck = (Duck)enumerator.Current;
+                if (duck1 is TargetDuck)
+                    continue;
+                duck = duck1;
+                break;
             }
             if (duck != null)
             {
