@@ -425,11 +425,11 @@ namespace RunTimeEdit
           IEnumerable<CodeInstruction> instructions)
         {
             return new List<CodeInstruction>()
-      {
-        new CodeInstruction(OpCodes.Ldarg_0),
-        new CodeInstruction(OpCodes.Call,  TasMod.SGMI(typeof (PatchInputProfile), "getleftStick")),
-        new CodeInstruction(OpCodes.Ret)
-      };
+          {
+            new CodeInstruction(OpCodes.Ldarg_0),
+            new CodeInstruction(OpCodes.Call,  TasMod.SGMI(typeof (PatchInputProfile), "getleftStick")),
+            new CodeInstruction(OpCodes.Ret)
+          };
         }
 
         private static IEnumerable<CodeInstruction> Transpilerget_rightStick(
@@ -533,6 +533,6 @@ namespace RunTimeEdit
             return new Vec2(0.0f, 0.0f);
         }
 
-        private static bool NotTasInput() => InputProfile.DefaultPlayer1 == null || InputProfile.DefaultPlayer1.GetDevice(typeof(tasDevice)) == null;
+        public static bool NotTasInput() => InputProfile.DefaultPlayer1 == null || InputProfile.DefaultPlayer1.GetDevice(typeof(tasDevice)) == null;
     }
 }

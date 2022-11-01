@@ -1,11 +1,6 @@
 ﻿using DuckGame;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-    //__instance.x.ToString() 
+//__instance.x.ToString() 
 namespace RunTimeEdit
 {
     internal class TargetDuckPatch

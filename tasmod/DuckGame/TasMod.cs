@@ -101,8 +101,11 @@ namespace DuckGame
                 mpatchList.Add(new MPatch(SGMI(typeof(InputProfile), "get_rightTrigger"), SGMI(typeof(PatchInputProfile), "Prefixget_rightTrigger")));
                 mpatchList.Add(new MPatch(SGMI(typeof(InputProfile), "get_leftTrigger"), SGMI(typeof(PatchInputProfile), "Prefixget_leftTrigger")));
                 mpatchList.Add(new MPatch(SGMI(typeof(InputProfile), "get_motionAxis"), SGMI(typeof(PatchInputProfile), "Prefixget_motionAxis")));
-                mpatchList.Add(new MPatch(SGMI(typeof(Graphics), "get_inFocus"), SGMI(typeof(GraphicsPatch), "Prefixget_inFocus")));
+
+                mpatchList.Add(new MPatch(SGMI(typeof(MonoMain), "RunUpdate"), null, null, SGMI(typeof(MonoMainPatch), "Transpiler")));
+
                 mpatchList.Add(new MPatch(SGMI(typeof(MonoMain), "RunUpdate"), SGMI(typeof(MonoMainPatch), "Prefix")));
+
                 mpatchList.Add(new MPatch(SGMI(typeof(Spring), "Touch"), SGMI(typeof(SpringPatch), "BPrefix")));
                 mpatchList.Add(new MPatch(SGMI(typeof(SpringDown), "Touch"), SGMI(typeof(SpringPatch), "DownPrefix")));
                 mpatchList.Add(new MPatch(SGMI(typeof(SpringDownLeft), "Touch"), SGMI(typeof(SpringPatch), "DownLeftPrefix")));

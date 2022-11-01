@@ -361,3 +361,21 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+tasmodRebuiltData.txt
+DuckGame.exe
+DuckGame.exe.config
+dgTasUI.exe.config
+dgTasUI.exe
+DGSteam.dll
+DuckGame.xml
+DGInput.dll
+CrashWindow.exe.config
+CrashWindow.exe
+120DuckGame.exe
+linux.sh
+NAudio.dll
+NAudio.xml
+NVorbis.dll
+NVorbis.NAudioSupport.dll
+tasmodRebuilt.dll
+tasmod.dll
