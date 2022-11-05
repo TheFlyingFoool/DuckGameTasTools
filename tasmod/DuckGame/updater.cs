@@ -43,46 +43,43 @@ namespace DuckGame
             TasMod.MapToDefault(tDev);
             tDev.start();
         }
-        private void checkloadCommand()
+        public static void InitCommands()
         {
-            List<string> list = ((IEnumerable<string>)DevConsole.core.previousLines.Last().ToLower().Split(' ')).Where(x => !string.IsNullOrEmpty(x)).ToList();
-            if (list.Count < 1)
-                return;
-            if (list[0] == "loadtas")
+            DevConsole.AddCommand(new CMD("loadtas", new CMD.Argument[1] { new CMD.String("filename", false) }, cmd =>
             {
-                DevConsole.core.lines.Last().color = Color.Black;
-                if (list.Count < 2)
+                string filename = cmd.Arg<string>("filename");
+                if (filename == "")
                 {
                     DevConsole.Log("invalid syntax: LoadTas <tas name>", Color.Red);
+                    DevConsole.Log("try one of the above instead", Color.White);
+                    return;
+                }
+                string str2 = TasMod.Directory + filename + ".dgtas";
+                if (!File.Exists(str2))
+                {
+                    foreach (string path in ((IEnumerable<FileInfo>)new DirectoryInfo(Path.GetDirectoryName(str2)).GetFiles("*.dgtas")).Select(x => x.Name))
+                        DevConsole.Log(Path.GetFileNameWithoutExtension(path), Color.Blue);
+                    DevConsole.Log("FILE NOT FOUND!", Color.Red);
+                    DevConsole.Log("Found Tas files are above", Color.White);
                 }
                 else
                 {
-                    list.RemoveAt(0);
-                    string str1 = string.Join(" ", list);
-                    string str2 = TasMod.Directory + str1 + ".dgtas";
-                    if (!File.Exists(str2))
-                    {
-                        DevConsole.Log("FILE NOT FOUND!", Color.Red);
-                        DevConsole.Log("Found Tas files:", Color.Blue);
-                        foreach (string path in ((IEnumerable<FileInfo>)new DirectoryInfo(Path.GetDirectoryName(str2)).GetFiles("*.dgtas")).Select(x => x.Name))
-                            DevConsole.Log(Path.GetFileNameWithoutExtension(path), Color.Blue);
-                    }
-                    else
-                    {
-                        tDev.loadInputs(str2);
-                        DevConsole.Log("Loaded " + str2, Color.Green);
-                    }
+                    tDev.loadInputs(str2);
+                    DevConsole.Log("Loaded " + str2, Color.Green);
                 }
-            }
-            else if (list[0] == "ss")
+            })
             {
-                DevConsole.core.lines.Last().color = Color.Black;
-                if (list.Count < 2)
+                //aliases = new List<string>() { "lev" }
+            });
+            DevConsole.AddCommand(new CMD("savestate", new CMD.Argument[1] { new CMD.String("statename", false) }, cmd =>
+            {
+                string statename = cmd.Arg<string>("statename");
+                if (statename == "")
                 {
                     DevConsole.Log("invalid syntax: ss <state name>", Color.Red);
                     return;
                 }
-                foreach(Duck current in Level.current.things[typeof(Duck)])
+                foreach (Duck current in Level.current.things[typeof(Duck)])
                 {
                     if (current is TargetDuck)
                         continue;
@@ -118,85 +115,80 @@ namespace DuckGame
                                 break;
                         }
                         dictionary[key] = new Dictionary<FieldInfo, object>() {
-                                {
-                                    typeof(Holdable).GetField("position",BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic),
-                                    holdable.position
-                                },
-                                {
-                                    typeof(Holdable).GetField("_angle", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic),
-                                     holdable._angle
-                                },
-                                {
-                                    typeof(Holdable).GetField("_hSpeed", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic),
-                                    holdable._hSpeed
-                                },
-                                {
-                                    typeof(Holdable).GetField("_grounded", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic),
-                                    holdable.grounded
-                                }
-                            };
+                        {
 
+                            typeof(Holdable).GetField("position",BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic),
+                            holdable.position
+                        },
+                        {
+                            typeof(Holdable).GetField("_angle", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic),
+                            holdable._angle
+                        },
+                        {
+                            typeof(Holdable).GetField("_hSpeed", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic),
+                            holdable._hSpeed
+                        },
+                        {
+                            typeof(Holdable).GetField("_grounded", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic),
+                            holdable.grounded
+                        }
+                        };
                     }
                     objectList.Add(num1);
                     objectList.Add(dictionary);
-                    savestates[list[1]] = objectList;
+                    savestates[statename] = objectList;
                     break;
                 }
-            }
-            else if (list[0] == "sl")
+            })
             {
-                DevConsole.core.lines.Last().color = Color.Black;
-                if (list.Count < 2)
+                aliases = new List<string>() { "ss" }
+            });
+            DevConsole.AddCommand(new CMD("saveload", new CMD.Argument[1] { new CMD.String("statename", false) }, cmd =>
+            {
+                string statename = cmd.Arg<string>("statename");
+                if (statename == "")
                 {
                     DevConsole.Log("invalid syntax: sl <state name>", Color.Red);
                     return;
                 }
-                if (!savestates.Keys.Contains(list[1]))
+                if (!savestates.Keys.Contains(statename))
                 {
                     DevConsole.Log("no save state found", Color.Red);
                     return;
                 }
-                lastsavedstate = savestates[list[1]];
-                loadstate(savestates[list[1]]);
-            }
-            else if (list[0] == "unloadtas")
+                lastsavedstate = savestates[statename];
+                loadstate(savestates[statename]);
+            })
             {
-                DevConsole.core.lines.Last().color = Color.Black;
+                aliases = new List<string>() { "sl" }
+            });
+            DevConsole.AddCommand(new CMD("unloadtas", cmd =>
+            {
                 DevConsole.Log("UNLOADED CURRENT TAS", Color.Green);
                 tDev.loadInputs("");
-            }
-            else if(list[0] == "duck")
+            }));
+            DevConsole.AddCommand(new CMD("duck", cmd =>
+            {
                 RecDuck.physicsfcksit = !RecDuck.physicsfcksit;
-            else if(list[0] == "maxragjump")
+            }));
+            DevConsole.AddCommand(new CMD("maxragjump", cmd =>
             {
                 RagdollPatch.maxragjump = !RagdollPatch.maxragjump;
                 DevConsole.Log("maxragjump " + RagdollPatch.maxragjump.ToString(), Color.Green);
-            }
-            else if (list[0] == "order")
+            }));
+            DevConsole.AddCommand(new CMD("order", cmd =>
             {
-                DevConsole.core.lines.Last().color = Color.Black;
                 foreach (Thing thing in Level.current.things)
                 {
-                    string[] strArray = new string[5]
+                    if (thing != null)
                     {
-                          thing.GetType().ToString(),
-                          " ",
-                          null,
-                          null,
-                          null
-                    };
-                    float num = thing.x;
-                    strArray[2] = num.ToString();
-                    strArray[3] = " ";
-                    num = thing.y;
-                    strArray[4] = num.ToString();
-                    DevConsole.Log(string.Concat(strArray), Color.Green);
+                        string[] strArray = new string[5] { thing.GetType().ToString(), " ", thing.x.ToString(), " ", thing.y.ToString() };
+                        DevConsole.Log(string.Concat(strArray), Color.Green);
+                    }
                 }
-                DevConsole.Log("UNLOADED CURRENT TAS", Color.Green);
-                tDev.loadInputs("");
-            }
+            }));
         }
-
+       
         private void LevelChanged()
         {
             currentDuck = null;
@@ -294,8 +286,6 @@ namespace DuckGame
                 doclip = !doclip;
                 DevConsole.Log(doclip ? "clip finder" : "Disabled clip finder", doclip ? Color.Green : Color.Red);
             }
-            if (Keyboard.Pressed(Keys.Enter) && DevConsole.open)
-                checkloadCommand();
             if (tDev != null && tDev.Inputs.Length != 0 && tDev.currentFrame == 0)
                 tasDevice.rng = tDev.Inputs[0].rng;
             if (shotgun || tasDevice.rng > 0)

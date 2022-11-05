@@ -52,10 +52,11 @@ namespace DuckGame
 
         private void wait()
         {
-            while (!(Level.current is TitleScreen))
-                Thread.Sleep(1000);
-            while (Level.current.things[typeof(Duck)].Count() <= 0)
-                Thread.Sleep(500);
+            //while (!(Level.current is TitleScreen))
+            //    Thread.Sleep(1000);
+            //while (Level.current.things[typeof(Duck)].Count() <= 0)
+            //    Thread.Sleep(500);
+            updater.InitCommands();
             Patch();
             _ = new updater();
         }
@@ -103,8 +104,6 @@ namespace DuckGame
                 mpatchList.Add(new MPatch(SGMI(typeof(InputProfile), "get_motionAxis"), SGMI(typeof(PatchInputProfile), "Prefixget_motionAxis")));
 
                 mpatchList.Add(new MPatch(SGMI(typeof(MonoMain), "RunUpdate"), null, null, SGMI(typeof(MonoMainPatch), "Transpiler")));
-
-                mpatchList.Add(new MPatch(SGMI(typeof(MonoMain), "RunUpdate"), SGMI(typeof(MonoMainPatch), "Prefix")));
 
                 mpatchList.Add(new MPatch(SGMI(typeof(Spring), "Touch"), SGMI(typeof(SpringPatch), "BPrefix")));
                 mpatchList.Add(new MPatch(SGMI(typeof(SpringDown), "Touch"), SGMI(typeof(SpringPatch), "DownPrefix")));
