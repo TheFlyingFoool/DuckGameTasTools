@@ -35,6 +35,7 @@ namespace DuckGame
 
         public override void Update()
         {
+            layer = Layer.Foreground;
             lock (linestodraw)
                 linestodraw.Clear();
             if (updater.doclip)
@@ -317,6 +318,7 @@ namespace DuckGame
                 {
                     if (!(duck is TargetDuck))
                     {
+                        updater.currentDuck = duck;
                         currentDucklocal = duck;
                     }
                 }
