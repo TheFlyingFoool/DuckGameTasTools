@@ -3,7 +3,7 @@
 //__instance.x.ToString() 
 namespace RunTimeEdit
 {
-    internal class TargetDuckPatch
+    public class TargetDuckPatch
     {
         public TargetDuckPatch()
         {

@@ -19,6 +19,8 @@ namespace DuckGame
         public static Duck currentDuck;
         private bool waitingforDuck;
         private Level prevLevel;
+        public static bool advancing;
+        public static bool frameadvance;
         public static bool frameshow;
         public static bool recording;
         public static List<inputFrame> frames = new List<inputFrame>();
@@ -29,16 +31,22 @@ namespace DuckGame
         public static FieldInfo _waitSpawnField = typeof(ChallengeLevel).GetField("_waitSpawn", BindingFlags.Instance | BindingFlags.NonPublic);
         public static Dictionary<string, List<object>> savestates = new Dictionary<string, List<object>>();
         public static List<object> lastsavedstate;
-
+        public static InputProfile PlayerOneBackup;
+        public static bool drawuncrouchrect;
         public void StopTAS()
         {
             if (currentDuck != null)
                 currentDuck.inputProfile.ClearMappings();
             Input.InitDefaultProfiles();
+            PlayerOneBackup = null;
         }
 
         public void startTAS()
         {
+            if (PlayerOneBackup == null)
+            {
+                PlayerOneBackup = InputProfile.DefaultPlayer1.Clone();
+            }
             InputProfile.DefaultPlayer1.ClearMappings();
             TasMod.MapToDefault(tDev);
             tDev.start();
@@ -171,6 +179,11 @@ namespace DuckGame
             {
                 RecDuck.physicsfcksit = !RecDuck.physicsfcksit;
             }));
+            DevConsole.AddCommand(new CMD("crouchhit", cmd =>
+            {
+                drawuncrouchrect = !drawuncrouchrect;
+                DevConsole.Log("drawuncrouchrect " + drawuncrouchrect.ToString(), Color.Green);
+            }));
             DevConsole.AddCommand(new CMD("maxragjump", cmd =>
             {
                 RagdollPatch.maxragjump = !RagdollPatch.maxragjump;
@@ -237,13 +250,49 @@ namespace DuckGame
         public int UpdateOrder => 1;
 
         public bool Enabled => true;
-
         public void UpdateBase()
         {
+            if (advancing)
+            {
+                advancing = false;
+            }
             if (Level.current != prevLevel)
                 LevelChanged();
             prevLevel = Level.current;
-            if (Keyboard.Released(Keys.F7))
+           
+            //if (Keyboard.Pressed(Keys.F5)) // I Never liked it
+            //{
+            //    debug = !debug; 
+            //    DevConsole.Log(debug ? "Enabled" : "Disabled Debug", debug ? Color.Green : Color.Red);
+            //}
+            if (Keyboard.Pressed(Keys.F9))
+            {
+                lastsavedstate = null;
+                showframe.cancerisbad = new List<List<Vec4>>();
+                showframe.CancerFrame = new List<List<object>>();
+                showframe.lowest = float.PositiveInfinity;
+            }
+            if (Keyboard.Pressed(Keys.F6))
+            {
+                frameshow = !frameshow;
+                DevConsole.Log(frameshow ? "Enabled FrameShow" : "Disabled FrameShow", frameshow ? Color.Green : Color.Red);
+            }
+           
+            if (Keyboard.Pressed(Keys.F8))
+            {
+                doclip = !doclip;
+                DevConsole.Log(doclip ? "clip finder" : "Disabled clip finder", doclip ? Color.Green : Color.Red);
+            }
+            if (Keyboard.Pressed(Keys.F9))
+            {
+                frameadvance = !frameadvance;
+                DevConsole.Log(frameadvance ? "Enabled Frame Advance" : "Disabled Frame Advance", frameadvance ? Color.Green : Color.Red);
+            }
+            if (Keyboard.Pressed(Keys.OemCloseBrackets))
+            {
+                advancing = !advancing;
+            }
+            if (Keyboard.Pressed(Keys.F7))
             {
                 if (recording)
                 {
@@ -262,30 +311,8 @@ namespace DuckGame
                     recording = true;
                 }
             }
-            if (currentDuck != null && recording)
+            if (currentDuck != null && recording && (!updater.frameadvance || updater.advancing))
                 frames.Add(new inputFrame(currentDuck.inputProfile));
-            //if (Keyboard.Pressed(Keys.F5)) // I Never liked it
-            //{
-            //    debug = !debug; 
-            //    DevConsole.Log(debug ? "Enabled" : "Disabled Debug", debug ? Color.Green : Color.Red);
-            //}
-            if (Keyboard.Pressed(Keys.F9))
-            {
-                lastsavedstate = null;
-                showframe.cancerisbad = new List<List<Vec4>>();
-                showframe.CancerFrame = new List<List<object>>();
-                showframe.lowest = float.PositiveInfinity;
-            }
-            if (Keyboard.Pressed(Keys.F6))
-            {
-                frameshow = !frameshow;
-                DevConsole.Log(frameshow ? "Enabled FrameShow" : "Disabled FrameShow", frameshow ? Color.Green : Color.Red);
-            }
-            if (Keyboard.Pressed(Keys.F8))
-            {
-                doclip = !doclip;
-                DevConsole.Log(doclip ? "clip finder" : "Disabled clip finder", doclip ? Color.Green : Color.Red);
-            }
             if (tDev != null && tDev.Inputs.Length != 0 && tDev.currentFrame == 0)
                 tasDevice.rng = tDev.Inputs[0].rng;
             if (shotgun || tasDevice.rng > 0)

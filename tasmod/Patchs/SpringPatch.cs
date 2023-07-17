@@ -3,7 +3,7 @@ using DuckGame;
 
 namespace RunTimeEdit
 {
-	internal class SpringPatch
+	public class SpringPatch
 	{
 		public SpringPatch()
 		{

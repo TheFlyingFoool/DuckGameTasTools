@@ -13,7 +13,7 @@ using static DuckGame.CMD;
 
 namespace RunTimeEdit
 {
-    internal class MonoMainPatch
+    public class MonoMainPatch
     {
         public static string Overwrite(string text, int position, string new_text)
         {

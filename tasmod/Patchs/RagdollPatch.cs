@@ -3,7 +3,7 @@ using DuckGame;
 
 namespace RunTimeEdit
 {
-	internal class RagdollPatch
+	public class RagdollPatch
 	{
 		public RagdollPatch()
 		{

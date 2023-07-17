@@ -75,6 +75,9 @@
     <Compile Include="DuckGame\MPatch.cs" />
     <Compile Include="DuckGame\SimDuck.cs" />
     <Compile Include="DuckGame\TasMod.cs" />
+    <Compile Include="Patchs\ChallengeLevelPatch.cs" />
+    <Compile Include="Patchs\LevelPatch.cs" />
+    <Compile Include="Patchs\QuadTreeObjectListPatch.cs" />
     <Compile Include="Patchs\SpringPatch.cs" />
     <Compile Include="Patchs\PatchInputProfile.cs" />
     <Compile Include="Patchs\MonoMainPatch.cs" />

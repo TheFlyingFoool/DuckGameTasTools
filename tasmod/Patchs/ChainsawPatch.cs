@@ -3,7 +3,7 @@ using DuckGame;
 
 namespace RunTimeEdit
 {
-    internal class ChainsawPatch
+    public class ChainsawPatch
     {
         private static void PrefixShing(Chainsaw __instance, Thing wall)
         {

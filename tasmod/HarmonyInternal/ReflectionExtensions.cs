@@ -16,7 +16,7 @@ public static class ReflectionExtensions
     {
         MemberInfo memberInfo = GetMemberInfo(obj, memberName);
         if (memberInfo == null)
-            throw new Exception(nameof(memberName));
+            throw new Exception("memberName " + memberName);
         if ((object)(memberInfo as PropertyInfo) != null)
             return memberInfo.As<PropertyInfo>().GetValue(obj, null);
         return (object)(memberInfo as FieldInfo) != null ? memberInfo.As<FieldInfo>().GetValue(obj) : throw new Exception();

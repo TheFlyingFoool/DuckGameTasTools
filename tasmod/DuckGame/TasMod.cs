@@ -1,4 +1,5 @@
-﻿using RunTimeEdit;
+﻿using Patchs;
+using RunTimeEdit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -92,6 +93,15 @@ namespace DuckGame
                 {
                 }
                 MethodInfo method = key1.GetType("HarmonyLoader.Loader").GetMethod("Patch2", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+
+
+
+                mpatchList.Add(new MPatch(SGMI(typeof(QuadTreeObjectList), "RefreshState"), SGMI(typeof(QuadTreeObjectListPatch), "PrefixRefreshState")));
+                mpatchList.Add(new MPatch(SGMI(typeof(Level), "UpdateThings"), SGMI(typeof(LevelPatch), "PrefixUpdateThings")));
+                mpatchList.Add(new MPatch(SGMI(typeof(Level), "PostUpdate"), SGMI(typeof(LevelPatch), "PrefixPostUpdate")));
+                mpatchList.Add(new MPatch(SGMI(typeof(ChallengeLevel), "Update"), SGMI(typeof(ChallengeLevelPatch), "PrefixUpdate")));
+                mpatchList.Add(new MPatch(SGMI(typeof(ChallengeLevel), "PauseLogic"), SGMI(typeof(ChallengeLevelPatch), "PrefixPausingLogic")));
+
                 mpatchList.Add(new MPatch(SGMI(typeof(TargetDuck), "Kill"), SGMI(typeof(TargetDuckPatch), "PrefixKill")));
                 mpatchList.Add(new MPatch(SGMI(typeof(Ragdoll), "UpdateInput"), SGMI(typeof(RagdollPatch), "PrefixUpdateInput")));
                 mpatchList.Add(new MPatch(SGMI(typeof(Chainsaw), "Shing"), SGMI(typeof(ChainsawPatch), "PrefixShing")));

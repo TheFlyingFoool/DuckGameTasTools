@@ -323,8 +323,14 @@ namespace DuckGame
                     }
                 }
             }
+            if (updater.drawuncrouchrect && currentDucklocal != null)
+            {
+                Graphics.DrawRect(new Vec2(currentDucklocal.x - 3f, currentDucklocal.y - 9f), new Vec2(currentDucklocal.x + 3f, currentDucklocal.y + 4f), Color.Blue, filled: false);
+            }
+
             if (!updater.debug && !updater.frameshow || currentDucklocal == null)
                 return;
+           
             Graphics.DrawCircle(new Vec2(currentDucklocal.x, currentDucklocal.y + 4f), 18f, Color.Orange);
             foreach (Holdable holdable1 in Level.CheckCircleAll<Holdable>(new Vec2(currentDucklocal.x, currentDucklocal.y + 4f), 18f).OrderBy(h => h, new CompareHoldablePriorities(currentDucklocal)))
             {
