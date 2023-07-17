@@ -95,7 +95,7 @@ namespace DuckGame
                 MethodInfo method = key1.GetType("HarmonyLoader.Loader").GetMethod("Patch2", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
 
 
-
+                //mpatchList.Add(new MPatch(SGMI(typeof(Camera), "DoUpdate"), SGMI(typeof(CameraPatch), "PrefixDoUpdate")));
                 mpatchList.Add(new MPatch(SGMI(typeof(QuadTreeObjectList), "RefreshState"), SGMI(typeof(QuadTreeObjectListPatch), "PrefixRefreshState")));
                 mpatchList.Add(new MPatch(SGMI(typeof(Level), "UpdateThings"), SGMI(typeof(LevelPatch), "PrefixUpdateThings")));
                 mpatchList.Add(new MPatch(SGMI(typeof(Level), "PostUpdate"), SGMI(typeof(LevelPatch), "PrefixPostUpdate")));

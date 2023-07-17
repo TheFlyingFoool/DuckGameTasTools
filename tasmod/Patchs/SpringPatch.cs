@@ -28,7 +28,7 @@ namespace RunTimeEdit
 				{
 					if (Math.Abs(with.hSpeed) < 0.1f)
 					{
-						with.hSpeed = ((Rando.Float(1f) >= 0.5f) ? 1.3f : -1.3f);
+						with.hSpeed = (Rando.Float(1f) >= 0.5f) ? 1.3f : -1.3f;
 					}
 					else
 					{
@@ -39,7 +39,7 @@ namespace RunTimeEdit
 				{
 					if (Math.Abs(with.hSpeed) < 0.1f)
 					{
-						with.hSpeed = ((Rando.Float(1f) >= 0.5f) ? 1.2f : -1.2f);
+						with.hSpeed = (Rando.Float(1f) >= 0.5f) ? 1.2f : -1.2f;
 					}
 					else
 					{

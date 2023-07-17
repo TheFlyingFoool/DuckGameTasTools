@@ -11,7 +11,7 @@ namespace Patchs
     {
         private static bool PrefixUpdateThings(Level __instance)
         {
-            if (((int)__instance.GetMemberValue("_updateWaitFrames")) <= 0 && __instance.levelIsUpdating && updater.frameadvance && !updater.advancing)
+            if (((int)__instance.GetMemberValue("_updateWaitFrames")) <= 0 && __instance.levelIsUpdating && updater.frameadvance && updater.AllowFrameSdvance && (!updater.advancing))
             {
                 return false;
             }
@@ -19,7 +19,7 @@ namespace Patchs
         }
         private static bool PrefixPostUpdate(Level __instance)
         {
-            if (((int)__instance.GetMemberValue("_updateWaitFrames")) <= 0 && __instance.levelIsUpdating && updater.frameadvance && !updater.advancing)
+            if (((int)__instance.GetMemberValue("_updateWaitFrames")) <= 0 && __instance.levelIsUpdating && updater.frameadvance && updater.AllowFrameSdvance && (!updater.advancing))
             {
                 return false;
             }

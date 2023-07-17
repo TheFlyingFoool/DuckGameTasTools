@@ -207,12 +207,12 @@ namespace DuckGame
                             {
                                 cancerisbad.Add(vec4List2);
                                 List<object> objectList = new List<object>()
-                {
-                   tasDevice.currentDevice.currentFrame.ToString() + " " + index1.ToString(),
-                   new Vec2(0.0f, (float) Offset.NextDouble())
-                };
+                                {
+                                   tasDevice.currentDevice._currentFrame.ToString() + " " + index1.ToString(),
+                                   new Vec2(0.0f, (float) Offset.NextDouble())
+                                };
                                 CancerFrame.Add(objectList);
-                                DevConsole.Log("thing " + tasDevice.currentDevice.currentFrame.ToString() + " " + index1.ToString() + " " + (num4.ToString() + " x " + position5.x + " y " + position5.y + " vx " + vec2_2.x + " vy " + vec2_2.y));
+                                DevConsole.Log("thing " + tasDevice.currentDevice._currentFrame.ToString() + " " + index1.ToString() + " " + num4.ToString() + " x " + position5.x + " y " + position5.y + " vx " + vec2_2.x + " vy " + vec2_2.y);
                             }
                         }
                         if (flag1)
@@ -248,7 +248,7 @@ namespace DuckGame
                 cancerisbad.Add(vec4List1);
                 List<object> objectList = new List<object>()
         {
-           tasDevice.currentDevice.currentFrame.ToString() + " " + num2.ToString(),
+           tasDevice.currentDevice._currentFrame.ToString() + " " + num2.ToString(),
            new Vec2(0.0f, (float) Offset.NextDouble())
         };
                 CancerFrame.Add(objectList);
@@ -375,7 +375,7 @@ namespace DuckGame
                 Graphics.DrawLine(currentDucklocal.topRight + new Vec2(3f, 4f), currentDucklocal.bottomRight + new Vec2(0.0f, -4f), Color.Red);
             else
                 Graphics.DrawLine(currentDucklocal.topRight + new Vec2(3f, 4f), currentDucklocal.bottomRight + new Vec2(0.0f, -4f), Color.AliceBlue);
-            Graphics.DrawString(tasDevice.currentDevice.currentFrame.ToString(), currentDucklocal.position - new Vec2(0.0f, 16f), Color.White);
+            Graphics.DrawString(tasDevice.currentDevice._currentFrame.ToString(), currentDucklocal.position - new Vec2(0.0f, 16f), Color.White);
             Vec2 velocity = currentDucklocal.velocity;
             Vec2 position1 = currentDucklocal.position;
             bool flag1 = false;
@@ -392,7 +392,7 @@ namespace DuckGame
                     {
                         velocity = ragdoll.part2.velocity;
                         position1 = ragdoll.part2.position;
-                        Graphics.DrawString(tasDevice.currentDevice.currentFrame.ToString(), ragdoll.part2.position - new Vec2(0.0f, 16f), Color.White);
+                        Graphics.DrawString(tasDevice.currentDevice._currentFrame.ToString(), ragdoll.part2.position - new Vec2(0.0f, 16f), Color.White);
                         Duck duck = ragdoll._duck;
                         if (duck.framesSinceRagdoll >= 1)
                         {
@@ -474,7 +474,7 @@ namespace DuckGame
             string text3 = velocity.y >= 0.0 ? "y  " + velocity.y.ToString() : "y " + velocity.y.ToString();
             string text4 = position1.x >= 0.0 ? "x  " + position1.x.ToString() : "x " + position1.x.ToString();
             string text5 = position1.y >= 0.0 ? "y  " + position1.y.ToString() : "y " + position1.y.ToString();
-            string text6 = "Frame #" + tasDevice.currentDevice.currentFrame.ToString();
+            string text6 = "Frame #" + tasDevice.currentDevice._currentFrame.ToString();
             string text7 = "can nudge " + flag1.ToString();
             string text8 = "can unragdoll " + flag2.ToString();
             string text9 = "can jump " + flag4.ToString();
@@ -488,20 +488,20 @@ namespace DuckGame
             Color black1 = Color.Black;
             Depth depth1 = new Depth();
             double scale2 = scale1;
-            Graphics.DrawStringOutline(text8, position2, white1, black1, depth1, scale: ((float)scale2));
+            Graphics.DrawStringOutline(text8, position2, white1, black1, depth1, scale: (float)scale2);
             Graphics.DrawStringOutline(text9, Level.current.camera.transformScreenVector(new Vec2(0.0f, 87f)), Color.White, Color.Black, scale: scale1);
             Vec2 position3 = Level.current.camera.transformScreenVector(new Vec2(0.0f, 102f));
             Color white2 = Color.White;
             Color black2 = Color.Black;
             Depth depth2 = new Depth();
             double scale3 = scale1;
-            Graphics.DrawStringOutline(text7, position3, white2, black2, depth2, scale: ((float)scale3));
+            Graphics.DrawStringOutline(text7, position3, white2, black2, depth2, scale: (float)scale3);
             Vec2 position4 = Level.current.camera.transformScreenVector(new Vec2(0.0f, 117f));
             Color white3 = Color.White;
             Color black3 = Color.Black;
             Depth depth3 = new Depth();
             double scale4 = scale1;
-            Graphics.DrawStringOutline(text6, position4, white3, black3, depth3, scale: ((float)scale4));
+            Graphics.DrawStringOutline(text6, position4, white3, black3, depth3, scale: (float)scale4);
             Graphics.DrawStringOutline(text1, Level.current.camera.transformScreenVector(new Vec2(0.0f, 132f)), Color.White, Color.Black, scale: scale1);
             if (currentDucklocal == null)
                 return;

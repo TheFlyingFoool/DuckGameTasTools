@@ -12,7 +12,7 @@ namespace Patchs
         private static bool PrefixUpdate(ChallengeLevel __instance)
         {
             Level level = __instance as Level;
-            if (((int)level.GetMemberValue("_updateWaitFrames")) <= 0 && __instance.levelIsUpdating && updater.frameadvance && !updater.advancing)
+            if (((int)level.GetMemberValue("_updateWaitFrames")) <= 0 && __instance.levelIsUpdating && updater.frameadvance && updater.AllowFrameSdvance && (!updater.advancing))
             {
                 PausingLogic(__instance);
                 return false;
@@ -23,12 +23,12 @@ namespace Patchs
         {
             if (Input.Pressed(Triggers.Start)/* || (updater.PlayerOneBackup != null && updater.PlayerOneBackup.Pressed(Triggers.Start))*/)
             {
-                UIComponent _pauseGroup = ((UIComponent)__instance.GetMemberValue("_pauseGroup"));
-                UIComponent _pauseMenu = ((UIComponent)__instance.GetMemberValue("_pauseMenu"));
+                UIComponent _pauseGroup = (UIComponent)__instance.GetMemberValue("_pauseGroup");
+                UIComponent _pauseMenu = (UIComponent)__instance.GetMemberValue("_pauseMenu");
                 _pauseGroup.Open();
                 _pauseMenu.Open();
                 MonoMain.pauseMenu = _pauseGroup;
-                if (!((bool)__instance.GetMemberValue("_paused")))
+                if (!(bool)__instance.GetMemberValue("_paused"))
                 {
                     SFX.Play("pause", 0.6f);
                     ChallengeLevel.timer.Stop();

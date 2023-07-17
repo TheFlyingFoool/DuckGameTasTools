@@ -12,7 +12,7 @@ namespace Patchs
         private static bool PrefixRefreshState()
         {
             Level level = Level.current;
-            if (level != null && ((int)level.GetMemberValue("_updateWaitFrames")) <= 0 && level.levelIsUpdating && updater.frameadvance && !updater.advancing)
+            if (level != null && ((int)level.GetMemberValue("_updateWaitFrames")) <= 0 && level.levelIsUpdating && updater.frameadvance && updater.AllowFrameSdvance && (!updater.advancing))
             {
                 return false;
             }

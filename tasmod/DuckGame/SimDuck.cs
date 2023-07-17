@@ -138,8 +138,8 @@ namespace DuckGame
                             if (!Lcancerisbad.Contains(vec4List2))
                             {
                                 Lcancerisbad.Add(vec4List2);
-                                LCancerFrame.Add(new Vec2(tasDevice.currentDevice.currentFrame, (float)showframe.Offset.NextDouble()));
-                                DevConsole.Log("thing " + tasDevice.currentDevice.currentFrame.ToString() + " " + index1.ToString() + " " + num3.ToString());
+                                LCancerFrame.Add(new Vec2(tasDevice.currentDevice._currentFrame, (float)showframe.Offset.NextDouble()));
+                                DevConsole.Log("thing " + tasDevice.currentDevice._currentFrame.ToString() + " " + index1.ToString() + " " + num3.ToString());
                             }
                         }
                         if (flag1)

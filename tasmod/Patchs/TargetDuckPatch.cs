@@ -16,7 +16,7 @@ namespace RunTimeEdit
             {
                 order = __instance.sequence.order;
             }
-            DevConsole.Log("TD Killed " + tasDevice.currentDevice.currentFrame.ToString() + " " + order.ToString() + " " + __instance.position.x.ToString() + " " + __instance.position.y.ToString());
+            DevConsole.Log("TD Killed " + tasDevice.currentDevice._currentFrame.ToString() + " " + order.ToString() + " " + __instance.position.x.ToString() + " " + __instance.position.y.ToString());
         }
     }
 }

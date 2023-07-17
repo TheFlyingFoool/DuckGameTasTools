@@ -14,7 +14,7 @@ namespace RunTimeEdit
             {
                 string[] strArray = new string[5]
                 {
-                  tasDevice.currentDevice.currentFrame.ToString(),
+                  tasDevice.currentDevice._currentFrame.ToString(),
                   " chainsaw 1 vSpeed += 2f ",
                   null,
                   null,
@@ -33,7 +33,7 @@ namespace RunTimeEdit
                 {
                     string[] strArray = new string[5]
                     {
-                        tasDevice.currentDevice.currentFrame.ToString(),
+                        tasDevice.currentDevice._currentFrame.ToString(),
                         " chainsaw 2 hSpeed -= 5f ",
                         null,
                         null,
@@ -51,7 +51,7 @@ namespace RunTimeEdit
                 {
                     string[] strArray = new string[5]
                     {
-            tasDevice.currentDevice.currentFrame.ToString(),
+            tasDevice.currentDevice._currentFrame.ToString(),
             " chainsaw 3 hSpeed += 5f ",
             null,
             null,
@@ -64,7 +64,7 @@ namespace RunTimeEdit
                     strArray[4] = x.ToString();
                     DevConsole.Log(string.Concat(strArray));
                 }
-                DevConsole.Log(tasDevice.currentDevice.currentFrame.ToString() + " chainsaw 4 vSpeed -= 2f ");
+                DevConsole.Log(tasDevice.currentDevice._currentFrame.ToString() + " chainsaw 4 vSpeed -= 2f ");
             }
         }
     }

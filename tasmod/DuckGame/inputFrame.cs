@@ -99,10 +99,10 @@ namespace DuckGame
 			{
 				PadState padState = (PadState)HelperG.GfieldVal(typeof(AnalogGamePad), "_state", analogGamePad);
 				DevConsole.Log(padState.sticks.left.x.ToString() + " " + padState.sticks.left.y.ToString());
-				LEFT = (padState.sticks.left.x < -0.6f || padState.IsButtonDown(PadButton.LeftThumbstickLeft) || padState.IsButtonDown(PadButton.DPadLeft));
-				RIGHT = (padState.sticks.left.x > 0.6f || padState.IsButtonDown(PadButton.LeftThumbstickRight) || padState.IsButtonDown(PadButton.DPadRight));
-				UP = (padState.sticks.left.y > 0.6f || padState.IsButtonDown(PadButton.LeftThumbstickUp) || padState.IsButtonDown(PadButton.DPadUp));
-				DOWN = (padState.sticks.left.y < -0.6f || padState.IsButtonDown(PadButton.LeftThumbstickDown) || padState.IsButtonDown(PadButton.DPadDown));
+				LEFT = padState.sticks.left.x < -0.6f || padState.IsButtonDown(PadButton.LeftThumbstickLeft) || padState.IsButtonDown(PadButton.DPadLeft);
+				RIGHT = padState.sticks.left.x > 0.6f || padState.IsButtonDown(PadButton.LeftThumbstickRight) || padState.IsButtonDown(PadButton.DPadRight);
+				UP = padState.sticks.left.y > 0.6f || padState.IsButtonDown(PadButton.LeftThumbstickUp) || padState.IsButtonDown(PadButton.DPadUp);
+				DOWN = padState.sticks.left.y < -0.6f || padState.IsButtonDown(PadButton.LeftThumbstickDown) || padState.IsButtonDown(PadButton.DPadDown);
 				JUMP = padState.IsButtonDown(PadButton.A);
 				SHOOT = padState.IsButtonDown(PadButton.X);
 				GRAB = padState.IsButtonDown(PadButton.Y);

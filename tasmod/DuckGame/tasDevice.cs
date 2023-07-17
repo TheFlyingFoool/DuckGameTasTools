@@ -14,7 +14,7 @@ namespace DuckGame
         public static tasDevice currentDevice;
         public inputFrame[] Inputs;
         public inputFrame currentInput;
-        public int currentFrame;
+        public int _currentFrame;
         public static int rng = -1;
         public bool running;
         public AnalogGamePad defaultDevice;
@@ -45,10 +45,9 @@ namespace DuckGame
         {
             did0once = false;
             did0oncetwo = false;
-            currentFrame = 0;
+            _currentFrame = 0;
             stop();
         }
-
         public void stop()
         {
             if (running)
@@ -63,21 +62,21 @@ namespace DuckGame
         {
             try
             {
-                if (running && (!updater.frameadvance || updater.advancing))
+                if (running && (!(updater.frameadvance && updater.AllowFrameSdvance) || updater.advancing))
                 {
-                    if (currentFrame >= Inputs.Length)
+                    if (_currentFrame >= Inputs.Length)
                     {
                         reset();
                         return;
                     }
-                    if (did0once && currentFrame > 1 && !did0oncetwo && updater.lastsavedstate != null && updater.lastsavedstate.Count > 0)
+                    if (did0once && _currentFrame > 1 && !did0oncetwo && updater.lastsavedstate != null && updater.lastsavedstate.Count > 0)
                     {
                         updater.loadstate(updater.lastsavedstate);
                         did0oncetwo = true;
                     }
-                    currentInput = Inputs[currentFrame];
-                    if (Inputs.Length > currentFrame + 1)
-                        rng = Inputs[currentFrame + 1].rng;
+                    currentInput = Inputs[_currentFrame];
+                    if (Inputs.Length > _currentFrame + 1)
+                        rng = Inputs[_currentFrame + 1].rng;
                     if (updater.currentDuck != null)
                     {
                         Vec2 velocity = updater.currentDuck.velocity;
@@ -100,10 +99,10 @@ namespace DuckGame
                         string str6 = vec2_1.y >= 0.0 ? "y  " + vec2_1.y.ToString() : "y " + vec2_1.y.ToString();
                         string str7 = vec2_2.x >= 0.0 ? "x  " + vec2_2.x.ToString() : "x " + vec2_2.x.ToString();
                         string str8 = vec2_2.y >= 0.0 ? "y  " + vec2_2.y.ToString() : "y " + vec2_2.y.ToString();
-                        DevConsole.Log("Frame " + currentFrame.ToString() + " " + str3 + " " + str4 + " " + str1 + " " + str2 + " " + str5 + " " + str6 + " " + str7 + " " + str8 + (" can jump" + flag2.ToString()));
+                        DevConsole.Log("Frame " + _currentFrame.ToString() + " " + str3 + " " + str4 + " " + str1 + " " + str2 + " " + str5 + " " + str6 + " " + str7 + " " + str8 + " can jump" + flag2.ToString());
                     }
                     if (did0once)
-                        ++currentFrame;
+                        ++_currentFrame;
                     did0once = true;
                 }
             }

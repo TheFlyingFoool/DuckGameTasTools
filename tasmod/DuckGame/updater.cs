@@ -33,6 +33,22 @@ namespace DuckGame
         public static List<object> lastsavedstate;
         public static InputProfile PlayerOneBackup;
         public static bool drawuncrouchrect;
+
+        public static bool AllowFrameSdvance
+        {
+            get
+            {
+                if (Level.current != null && Level.current.camera != null && Level.current.camera is FollowCam)
+                {
+                    if ((int)((DuckGame.FollowCam)Level.current.camera).GetMemberValue("_framesCreated") > 2)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+                return true;
+            }
+        }
         public void StopTAS()
         {
             if (currentDuck != null)
@@ -107,7 +123,7 @@ namespace DuckGame
                     objectList.Add(current.sliding);
                     objectList.Add(current.crouch);
                     objectList.Add(current.slideBuildup);
-                    objectList.Add(tasDevice.currentDevice.currentFrame);
+                    objectList.Add(tasDevice.currentDevice._currentFrame);
                     int num1 = -1;
                     foreach (Holdable holdable in Level.current.things[typeof(Holdable)])
                     {
@@ -311,9 +327,9 @@ namespace DuckGame
                     recording = true;
                 }
             }
-            if (currentDuck != null && recording && (!updater.frameadvance || updater.advancing))
+            if (currentDuck != null && recording && (!(updater.frameadvance && updater.AllowFrameSdvance) || updater.advancing))
                 frames.Add(new inputFrame(currentDuck.inputProfile));
-            if (tDev != null && tDev.Inputs.Length != 0 && tDev.currentFrame == 0)
+            if (tDev != null && tDev.Inputs.Length != 0 && tDev._currentFrame == 0)
                 tasDevice.rng = tDev.Inputs[0].rng;
             if (shotgun || tasDevice.rng > 0)
             {
@@ -395,7 +411,7 @@ namespace DuckGame
                 duck.sliding = (bool)state[11];
                 duck.crouch = (bool)state[12];
                 duck.slideBuildup = (float)state[13];
-                tasDevice.currentDevice.currentFrame = (int)state[14];
+                tasDevice.currentDevice._currentFrame = (int)state[14];
                 foreach (Mod accessibleMod in ModLoader.accessibleMods)
                 {
                     if (!(accessibleMod is CoreMod) && accessibleMod.configuration != null && !(bool)typeof(ModConfiguration).GetProperty("disabled", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(accessibleMod.configuration))
