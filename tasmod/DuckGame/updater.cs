@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using static DuckGame.CMD;
 
 namespace DuckGame
 {
@@ -17,7 +18,7 @@ namespace DuckGame
         public static FieldInfo startedField;
         public static tasDevice tDev;
         public static Duck currentDuck;
-        private bool waitingforDuck;
+        private static bool waitingforDuck;
         private Level prevLevel;
         public static bool advancing;
         public static bool frameadvance;
@@ -31,38 +32,59 @@ namespace DuckGame
         public static FieldInfo _waitSpawnField = typeof(ChallengeLevel).GetField("_waitSpawn", BindingFlags.Instance | BindingFlags.NonPublic);
         public static Dictionary<string, List<object>> savestates = new Dictionary<string, List<object>>();
         public static List<object> lastsavedstate;
-        public static InputProfile PlayerOneBackup;
+        //public static InputProfile PlayerOneBackup;
         public static bool drawuncrouchrect;
 
-        public static bool AllowFrameSdvance
+        public static bool AllowFrameAdvance
         {
             get
             {
                 if (Level.current != null && Level.current.camera != null && Level.current.camera is FollowCam)
                 {
-                    if ((int)((DuckGame.FollowCam)Level.current.camera).GetMemberValue("_framesCreated") > 2)
+                    int framesCreated = (int)((DuckGame.FollowCam)Level.current.camera).GetMemberValue("_framesCreated");
+
+                    if (framesCreated <= 10)
                     {
-                        return true;
+                        return false;
                     }
-                    return false;
+
+                    if (Level.current is ChallengeLevel)
+                    {
+                        if (framesCreated <= 64)
+                        {
+                            return false;
+                        }
+
+                        ChallengeLevel challengeLevel = Level.current as ChallengeLevel;
+                        ChallengeMode mode = challengeLevel._challenge;
+
+                        if (mode != null && ((bool)mode.GetMemberValue("_ended") || (bool)challengeLevel.GetMemberValue("_restarting")))
+                        {
+                            return false;
+                        }
+                    }
+
+                    return true;
                 }
+
                 return true;
             }
         }
+
         public void StopTAS()
         {
             if (currentDuck != null)
                 currentDuck.inputProfile.ClearMappings();
             Input.InitDefaultProfiles();
-            PlayerOneBackup = null;
+            //PlayerOneBackup = null;
         }
 
         public void startTAS()
         {
-            if (PlayerOneBackup == null)
-            {
-                PlayerOneBackup = InputProfile.DefaultPlayer1.Clone();
-            }
+            //if (PlayerOneBackup == null)
+            //{
+            //    PlayerOneBackup = InputProfile.DefaultPlayer1.Clone();
+            //}
             InputProfile.DefaultPlayer1.ClearMappings();
             TasMod.MapToDefault(tDev);
             tDev.start();
@@ -327,7 +349,7 @@ namespace DuckGame
                     recording = true;
                 }
             }
-            if (currentDuck != null && recording && (!(updater.frameadvance && updater.AllowFrameSdvance) || updater.advancing))
+            if (currentDuck != null && recording && (!(updater.frameadvance && updater.AllowFrameAdvance) || updater.advancing))
                 frames.Add(new inputFrame(currentDuck.inputProfile));
             if (tDev != null && tDev.Inputs.Length != 0 && tDev._currentFrame == 0)
                 tasDevice.rng = tDev.Inputs[0].rng;

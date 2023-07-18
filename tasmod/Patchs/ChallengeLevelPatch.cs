@@ -12,7 +12,7 @@ namespace Patchs
         private static bool PrefixUpdate(ChallengeLevel __instance)
         {
             Level level = __instance as Level;
-            if (((int)level.GetMemberValue("_updateWaitFrames")) <= 0 && __instance.levelIsUpdating && updater.frameadvance && updater.AllowFrameSdvance && (!updater.advancing))
+            if (((int)level.GetMemberValue("_updateWaitFrames")) <= 0 && __instance.levelIsUpdating && updater.frameadvance && updater.AllowFrameAdvance && (!updater.advancing))
             {
                 PausingLogic(__instance);
                 return false;

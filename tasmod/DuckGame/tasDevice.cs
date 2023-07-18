@@ -62,7 +62,7 @@ namespace DuckGame
         {
             try
             {
-                if (running && (!(updater.frameadvance && updater.AllowFrameSdvance) || updater.advancing))
+                if (running && (!(updater.frameadvance && updater.AllowFrameAdvance) || updater.advancing))
                 {
                     if (_currentFrame >= Inputs.Length)
                     {
