@@ -96,6 +96,7 @@ namespace DuckGame
 
 
                 //mpatchList.Add(new MPatch(SGMI(typeof(Camera), "DoUpdate"), SGMI(typeof(CameraPatch), "PrefixDoUpdate")));
+                mpatchList.Add(new MPatch(SGMI(typeof(AutoUpdatables), "Update"), SGMI(typeof(AutoUpdatablesPatch), "PrefixUpdate")));
                 mpatchList.Add(new MPatch(SGMI(typeof(QuadTreeObjectList), "RefreshState"), SGMI(typeof(QuadTreeObjectListPatch), "PrefixRefreshState")));
                 mpatchList.Add(new MPatch(SGMI(typeof(Level), "UpdateThings"), SGMI(typeof(LevelPatch), "PrefixUpdateThings")));
                 mpatchList.Add(new MPatch(SGMI(typeof(Level), "PostUpdate"), SGMI(typeof(LevelPatch), "PrefixPostUpdate")));

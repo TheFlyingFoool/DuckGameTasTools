@@ -303,7 +303,7 @@ namespace DuckGame
             //    debug = !debug; 
             //    DevConsole.Log(debug ? "Enabled" : "Disabled Debug", debug ? Color.Green : Color.Red);
             //}
-            if (Keyboard.Pressed(Keys.F9))
+            if (Keyboard.Pressed(Keys.F10))
             {
                 lastsavedstate = null;
                 showframe.cancerisbad = new List<List<Vec4>>();

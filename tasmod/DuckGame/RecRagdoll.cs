@@ -20,7 +20,7 @@ namespace DuckGame
             Organize2();
             if (Network.isActive && !GhostManager.inGhostLoop)
                 GhostManager.context.MakeGhost(this);
-            if (Math.Abs(hSpeed) < 0.200000002980232)
+            if (Math.Abs(hSpeed) < 0.2f)
                 hSpeed = NetRand.Float(0.3f, 1f) * (NetRand.Float(1f) >= 0.5 ? 1f : -1f);
             float num1 = _slide ? 1f : 1.05f;
             float num2 = _slide ? 1f : 0.95f;
